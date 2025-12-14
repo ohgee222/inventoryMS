@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "dhdKKbocLHnnBoYrgFh5SjkInG9Xwoc1vIMQ9JFhRMPU9lvJqCrXHu/w3VCFPP+NmLmGJy4tG7tD8IJJcwMInw==",
+  "success": true,
+  "projectFilePath": "/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/InventoryMS.csproj",
+  "expectedPackageFiles": [
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.31/microsoft.aspnetcore.app.ref.6.0.31.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.host.osx-x64/6.0.31/microsoft.netcore.app.host.osx-x64.6.0.31.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.ref/6.0.31/microsoft.netcore.app.ref.6.0.31.nupkg.sha512"
+  ],
+  "logs": []
+}
