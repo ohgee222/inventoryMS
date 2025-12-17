@@ -1,11 +1,12 @@
-﻿using System;
-namespace InventoryMS.Models.Enums
+﻿namespace InventoryMS.Models.Enums
 {
-	public class NotificationType
-	{
-		public NotificationType()
-		{
-		}
-	}
+    public enum NotificationType
+    {
+        Overdue,
+        DueSoon,
+        Approved,
+        Rejected,
+        Info,
+        Warning
+    }
 }
-

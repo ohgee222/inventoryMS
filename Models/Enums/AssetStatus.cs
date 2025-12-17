@@ -1,11 +1,9 @@
-﻿using System;
-namespace InventoryMS.Models.Enums
+﻿namespace InventoryMS.Models.Enums
 {
-	public class AssetStatus
-	{
-		public AssetStatus()
-		{
-		}
-	}
+    public enum AssetStatus
+    {
+        Available,
+        CheckedOut,
+        Reserved
+    }
 }
-

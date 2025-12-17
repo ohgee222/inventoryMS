@@ -1,11 +1,9 @@
-﻿using System;
-namespace InventoryMS.Models.Enums
+﻿namespace InventoryMS.Models.Enums
 {
-	public class LoanRequestStatus
-	{
-		public LoanRequestStatus()
-		{
-		}
-	}
+    public enum LoanRequestStatus
+    {
+        Pending,
+        Approved,
+        Rejected
+    }
 }
-

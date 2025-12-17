@@ -1,11 +1,13 @@
-﻿using System;
-namespace InventoryMS.Models.Enums
+﻿namespace InventoryMS.Models.Enums
 {
-	public class changeType
-	{
-		public changeType()
-		{
-		}
-	}
+    public enum ChangeType
+    {
+        Created,
+        Updated,
+        StatusChanged,
+        ConditionChanged,
+        Loaned,
+        Returned,
+        Deleted
+    }
 }
-

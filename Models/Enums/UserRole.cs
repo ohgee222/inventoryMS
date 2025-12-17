@@ -1,11 +1,9 @@
-﻿using System;
-namespace InventoryMS.Models.Enums
+﻿namespace InventoryMS.Models.Enums
 {
-	public class UserRole
-	{
-		public UserRole()
-		{
-		}
-	}
+    public enum UserRole
+    {
+        Admin,
+        Staff,
+        Student
+    }
 }
-
