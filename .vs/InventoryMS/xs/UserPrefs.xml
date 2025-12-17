@@ -1,11 +1,29 @@
 ﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default">
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
+    <Files>
+      <File FileName="Program.cs" Line="32" Column="1" />
+      <File FileName="docker-compose.yml" />
+      <File FileName="appsettings.json" />
+      <File FileName="InventoryMS.usertasks" Line="1" Column="1" />
+      <File FileName="Models/Entities/Users.cs" Line="18" Column="1" />
+      <File FileName="Models/Entities/Assets.cs" />
+      <File FileName="Models/Entities/Loan.cs" />
+      <File FileName="Models/Entities/LoanRequest.cs" />
+      <File FileName="Models/Entities/Notification.cs" />
+      <File FileName="Data/DatabaseDb.cs" Line="31" Column="2" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="InventoryMS" expanded="True">
-            <Node name="InventoryMS" selected="True" />
+          <Node name="InventoryMS">
+            <Node name="InventoryMS">
+              <Node name="Data" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="Entities" expanded="True" />
+              </Node>
+              <Node name="Program.cs" selected="True" />
+            </Node>
           </Node>
         </State>
       </Pad>
@@ -13,6 +31,8 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
 </Properties>

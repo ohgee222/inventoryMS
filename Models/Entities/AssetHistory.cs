@@ -1,10 +1,11 @@
 ﻿using System;
 namespace InventoryMS.Models.Entities
 {
-	public class Assets
+	public class AssetHistory
 	{
-		public string id { get; set; }
-
+		public AssetHistory()
+		{
+		}
 	}
 }
 

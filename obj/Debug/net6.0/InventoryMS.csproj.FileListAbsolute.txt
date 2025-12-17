@@ -29,3 +29,11 @@
 /Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/obj/Debug/net6.0/InventoryMS.pdb
 /Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/obj/Debug/net6.0/InventoryMS.genruntimeconfig.cache
 /Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/obj/Debug/net6.0/ref/InventoryMS.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/Humanizer.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/MySqlConnector.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/bin/Debug/net6.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/obj/Debug/net6.0/InventoryMS.csproj.CopyComplete
