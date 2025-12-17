@@ -22,6 +22,7 @@ namespace InventoryMS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsers()
         {
+            //query database for all active users
             var users = await _context.Users
                 .Where(u => u.IsActive)
                 .Select(u => new UserResponseDto
@@ -38,15 +39,16 @@ namespace InventoryMS.Controllers
                     IsActive = u.IsActive,
                     CreatedAt = u.CreatedAt
                 })
-                .ToListAsync();
+                .ToListAsync();//execute the query and return as list
 
             return Ok(users);
         }
-
+        // to get single user
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponseDto>> GetUser(int id)
         {
+            // find user by id
             var user = await _context.Users
                 .Where(u => u.id == id)
                 .Select(u => new UserResponseDto
@@ -73,6 +75,7 @@ namespace InventoryMS.Controllers
             return Ok(user);
         }
 
+        //create User
         // POST: api/Users
         [HttpPost]
         public async Task<ActionResult<UserResponseDto>> CreateUser(CreateUserDto dto)
@@ -89,7 +92,7 @@ namespace InventoryMS.Controllers
                 return BadRequest(new { message = "Email already exists" });
             }
 
-            // Hash the password
+            // Hash the password for security
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var user = new Users
@@ -106,9 +109,10 @@ namespace InventoryMS.Controllers
                 CreatedAt = DateTime.UtcNow
             };
 
+            //save to the database
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
+            //coonvert responsen dto without password
             var response = new UserResponseDto
             {
                 Id = user.id,
