@@ -1,5 +1,7 @@
-﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default">
-  <MultiItemStartupConfigurations />
+﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default" GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints />
   <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
       <File FileName="Program.cs" Line="32" Column="1" />
@@ -29,10 +31,6 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MultiItemStartupConfigurations />
 </Properties>

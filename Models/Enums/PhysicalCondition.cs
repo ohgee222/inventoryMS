@@ -1,11 +1,11 @@
-﻿using System;
-namespace InventoryMS.Models.Enums
+﻿namespace InventoryMS.Models.Enums
 {
-	public class PhysicalCondition
-	{
-		public PhysicalCondition()
-		{
-		}
-	}
+    public enum PhysicalCondition
+    {
+        Good,
+        Fair,
+        Poor,
+        InRepair,
+        Retired
+    }
 }
-
