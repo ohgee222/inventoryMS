@@ -1,0 +1,49 @@
+﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default" GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Data/InventoryDb.cs">
+    <Files>
+      <File FileName="Program.cs" Line="13" Column="1" />
+      <File FileName="docker-compose.yml" />
+      <File FileName="appsettings.json" Line="10" Column="100" />
+      <File FileName="InventoryMS.usertasks" />
+      <File FileName="Models/Entities/Users.cs" Line="64" Column="106" />
+      <File FileName="Models/Entities/Assets.cs" Line="62" Column="1" />
+      <File FileName="Models/Entities/Loan.cs" Line="46" Column="29" />
+      <File FileName="Models/Entities/LoanRequest.cs" Line="44" Column="29" />
+      <File FileName="Models/Entities/Notification.cs" Line="42" Column="29" />
+      <File FileName="Data/DatabaseDb.cs" Line="119" Column="6" />
+      <File FileName="Models/Entities/Category.cs" Line="30" Column="1" />
+      <File FileName="Models/Entities/AssetHistory.cs" Line="36" Column="29" />
+      <File FileName="Models/Enums/UserRole.cs" Line="10" Column="1" />
+      <File FileName="Models/Enums/AssetStatus.cs" Line="10" Column="1" />
+      <File FileName="Models/Enums/PhysicalCondition.cs" Line="12" Column="1" />
+      <File FileName="Models/Enums/LoanRequestStatus.cs" Line="10" Column="1" />
+      <File FileName="Models/Enums/LoanStatus.cs" Line="10" Column="1" />
+      <File FileName="Models/Enums/NotificationType.cs" Line="13" Column="1" />
+      <File FileName="Models/Enums/changeType.cs" Line="14" Column="1" />
+      <File FileName="Controllers/AssetsController.cs" Line="16" Column="45" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="InventoryMS">
+            <Node name="InventoryMS">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="wwwroot" expanded="True">
+                <Node name="js" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MultiItemStartupConfigurations />
+</Properties>
