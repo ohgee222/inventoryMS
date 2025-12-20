@@ -30,9 +30,9 @@ namespace InventoryMS.Models.Entities
 
         public PhysicalCondition? ReturnCondition { get; set; }
 
-        public string ReturnNotes { get; set; }
+        public string? ReturnNotes { get; set; }
 
-        public int OverdueDays { get; set; } = 0;
+        public int OverdueDays { get; set; }
 
         public int? ReceivedByStaffId { get; set; }
 
@@ -49,10 +49,10 @@ namespace InventoryMS.Models.Entities
         public virtual Users User { get; set; }
 
         [ForeignKey("ApprovedByStaffId")]
-        public virtual Users ApprovedByStaff { get; set; }
+        public virtual Users? ApprovedByStaff { get; set; }
 
         [ForeignKey("ReceivedByStaffId")]
-        public virtual Users ReceivedByStaff { get; set; }
+        public virtual Users? ReceivedByStaff { get; set; }
 
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 

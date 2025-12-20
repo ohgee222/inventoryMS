@@ -17,116 +17,75 @@ namespace InventoryMS.Controllers
             _context = context;
         }
 
-        // GET: api/Loans
+        // GET: api/Loans (Raw SQL to avoid NULL issues)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LoanResponseDto>>> GetLoans([FromQuery] string status = null)
+        public async Task<IActionResult> GetLoans()
         {
-            var query = _context.Loans
-                .Include(l => l.User)
-                .Include(l => l.Asset)
-                    .ThenInclude(a => a.Category)
-                .Include(l => l.ApprovedByStaff)
-                .AsQueryable();
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
 
-            // Filter by status if provided
-            if (!string.IsNullOrEmpty(status))
+            using var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT 
+                    l.Id,
+                    l.AssetId,
+                    a.Name as AssetName,
+                    a.SerialNumber,
+                    l.UserId,
+                    CONCAT(u.Fname, ' ', u.Lname) as UserName,
+                    u.UniversityId as UserUniversityId,
+                    l.CheckOutDate,
+                    l.DueDate,
+                    l.ReturnDate,
+                    COALESCE(l.Status, 'Active') as Status,
+                    COALESCE(l.OverdueDays, 0) as OverdueDays
+                FROM Loans l
+                INNER JOIN Assets a ON l.AssetId = a.Id
+                INNER JOIN Users u ON l.UserId = u.Id
+                ORDER BY l.CheckOutDate DESC";
+
+            var loans = new List<LoanSimpleDto>();
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
             {
-                if (Enum.TryParse<LoanStatus>(status, true, out var loanStatus))
+                loans.Add(new LoanSimpleDto
                 {
-                    query = query.Where(l => l.Status == loanStatus);
-                }
+                    Id = reader.GetInt32(0),
+                    AssetId = reader.GetInt32(1),
+                    AssetName = reader.GetString(2),
+                    SerialNumber = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    UserId = reader.GetInt32(4),
+                    UserName = reader.GetString(5),
+                    UserUniversityId = reader.GetString(6),
+                    CheckOutDate = reader.GetDateTime(7),
+                    DueDate = reader.GetDateTime(8),
+                    ReturnDate = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
+                    Status = reader.GetString(10),
+                    OverdueDays = reader.GetInt32(11)
+                });
             }
-
-            var loans = await query
-                .OrderByDescending(l => l.CheckOutDate)
-                .Select(l => new LoanResponseDto
-                {
-                    Id = l.Id,
-                    AssetId = l.AssetId,
-                    AssetName = l.Asset.Name,
-                    SerialNumber = l.Asset.SerialNumber,
-                    UserId = l.UserId,
-                    UserName = l.User.FullName,
-                    UserUniversityId = l.User.UniversityId,
-                    ApprovedByStaffId = l.ApprovedByStaffId,
-                    ApprovedByStaffName = l.ApprovedByStaff != null ? l.ApprovedByStaff.FullName : null,
-                    CheckOutDate = l.CheckOutDate,
-                    DueDate = l.DueDate,
-                    ReturnDate = l.ReturnDate,
-                    ReturnCondition = l.ReturnCondition.HasValue ? l.ReturnCondition.Value.ToString() : null,
-                    ReturnNotes = l.ReturnNotes,
-                    OverdueDays = l.OverdueDays,
-                    Status = l.Status.ToString(),
-                    IsOverdue = l.IsOverdue,
-                    DaysUntilDue = l.DaysUntilDue
-                })
-                .ToListAsync();
 
             return Ok(loans);
         }
 
-        // GET: api/Loans/5
-        // build teh query with all related data, borrower info, asset info, asset category and staff who approved
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LoanResponseDto>> GetLoan(int id)
-        {
-            var loan = await _context.Loans
-                .Include(l => l.User)
-                .Include(l => l.Asset)
-                    .ThenInclude(a => a.Category)
-                .Include(l => l.ApprovedByStaff)
-                .Include(l => l.ReceivedByStaff)
-                .Where(l => l.Id == id)
-                .Select(l => new LoanResponseDto
-                {
-                    Id = l.Id,
-                    AssetId = l.AssetId,
-                    AssetName = l.Asset.Name,
-                    SerialNumber = l.Asset.SerialNumber,
-                    UserId = l.UserId,
-                    UserName = l.User.FullName,
-                    UserUniversityId = l.User.UniversityId,
-                    ApprovedByStaffId = l.ApprovedByStaffId,
-                    ApprovedByStaffName = l.ApprovedByStaff != null ? l.ApprovedByStaff.FullName : null,
-                    CheckOutDate = l.CheckOutDate,
-                    DueDate = l.DueDate,
-                    ReturnDate = l.ReturnDate,
-                    ReturnCondition = l.ReturnCondition.HasValue ? l.ReturnCondition.Value.ToString() : null,
-                    ReturnNotes = l.ReturnNotes,
-                    OverdueDays = l.OverdueDays,
-                    ReceivedByStaffName = l.ReceivedByStaff != null ? l.ReceivedByStaff.FullName : null,
-                    Status = l.Status.ToString(),
-                    IsOverdue = l.IsOverdue,
-                    DaysUntilDue = l.DaysUntilDue
-                })
-                .FirstOrDefaultAsync();
-
-            if (loan == null)
-            {
-                return NotFound(new { message = $"Loan with ID {id} not found" });
-            }
-
-            return Ok(loan);
-        }
-
-        // POST: api/Loans (Check out equipment)
+        // POST: api/Loans (Create loan)
         [HttpPost]
-        public async Task<ActionResult<LoanResponseDto>> CreateLoan(CreateLoanDto dto)
+        public async Task<IActionResult> CreateLoan(CreateLoanDto dto)
         {
-            // Validate asset exists
+            // Validate asset
             var asset = await _context.Assets.FindAsync(dto.AssetId);
             if (asset == null)
             {
                 return BadRequest(new { message = "Asset not found" });
             }
 
-            // Check if asset is available
             if (asset.Status != AssetStatus.Available)
             {
-                return BadRequest(new { message = $"Asset is not available. Current status: {asset.Status}" });
+                return BadRequest(new { message = $"Asset not available. Status: {asset.Status}" });
             }
 
-            // Validate user exists
+            // Validate user
             var user = await _context.Users.FindAsync(dto.UserId);
             if (user == null)
             {
@@ -138,80 +97,66 @@ namespace InventoryMS.Controllers
                 return BadRequest(new { message = "User account is inactive" });
             }
 
-            // Validate staff exists if provided
-            if (dto.ApprovedByStaffId.HasValue)
-            {
-                var staff = await _context.Users.FindAsync(dto.ApprovedByStaffId.Value);
-                if (staff == null || (staff.Role != UserRole.Staff && staff.Role != UserRole.Admin))
-                {
-                    return BadRequest(new { message = "Invalid staff member" });
-                }
-            }
+            // Create loan using raw SQL
+            var checkOutDate = DateTime.UtcNow;
 
-            // Create the loan
-            var loan = new Loan
-            {
-                AssetId = dto.AssetId,
-                UserId = dto.UserId,
-                ApprovedByStaffId = dto.ApprovedByStaffId,
-                CheckOutDate = DateTime.UtcNow,
-                DueDate = dto.DueDate,
-                Status = LoanStatus.Active,
-                CreatedAt = DateTime.UtcNow
-            };
+            await _context.Database.ExecuteSqlRawAsync(
+                @"INSERT INTO Loans (AssetId, UserId, ApprovedByStaffId, CheckOutDate, DueDate, Status, OverdueDays, CreatedAt)
+                  VALUES ({0}, {1}, {2}, {3}, {4}, '0', 0, {5})",
+                dto.AssetId, dto.UserId, dto.ApprovedByStaffId, checkOutDate, dto.DueDate, checkOutDate);
 
             // Update asset status
             asset.Status = AssetStatus.CheckedOut;
             asset.UpdatedAt = DateTime.UtcNow;
-
-            _context.Loans.Add(loan);
             await _context.SaveChangesAsync();
 
-            // Reload with includes for response
-            var createdLoan = await _context.Loans
-                .Include(l => l.User)
-                .Include(l => l.Asset)
-                .Include(l => l.ApprovedByStaff)
-                .FirstOrDefaultAsync(l => l.Id == loan.Id);
-
-            var response = new LoanResponseDto
+            return Ok(new
             {
-                Id = createdLoan.Id,
-                AssetId = createdLoan.AssetId,
-                AssetName = createdLoan.Asset.Name,
-                SerialNumber = createdLoan.Asset.SerialNumber,
-                UserId = createdLoan.UserId,
-                UserName = createdLoan.User.FullName,
-                UserUniversityId = createdLoan.User.UniversityId,
-                ApprovedByStaffId = createdLoan.ApprovedByStaffId,
-                ApprovedByStaffName = createdLoan.ApprovedByStaff?.FullName,
-                CheckOutDate = createdLoan.CheckOutDate,
-                DueDate = createdLoan.DueDate,
-                Status = createdLoan.Status.ToString()
-            };
-
-            return CreatedAtAction(nameof(GetLoan), new { id = loan.Id }, response);
+                message = "Loan created successfully",
+                assetId = dto.AssetId,
+                userId = dto.UserId,
+                checkOutDate = checkOutDate,
+                dueDate = dto.DueDate,
+                status = "Active"
+            });
         }
 
-        // PUT: api/Loans/5/return (Return equipment)
+        // PUT: api/Loans/{id}/return
         [HttpPut("{id}/return")]
         public async Task<IActionResult> ReturnLoan(int id, ReturnLoanDto dto)
         {
-            var loan = await _context.Loans
-                .Include(l => l.Asset)
-                .FirstOrDefaultAsync(l => l.Id == id);
+            // Check loan exists and get data using raw SQL
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
 
-            if (loan == null)
+            using var checkCommand = connection.CreateCommand();
+            checkCommand.CommandText = "SELECT AssetId, DueDate, COALESCE(Status, 'Active') as Status FROM Loans WHERE Id = @id";
+            checkCommand.Parameters.Add(new MySqlConnector.MySqlParameter("@id", id));
+
+            int assetId = 0;
+            DateTime dueDate = DateTime.MinValue;
+            string status = "";
+
+            using (var reader = await checkCommand.ExecuteReaderAsync())
             {
-                return NotFound(new { message = $"Loan with ID {id} not found" });
+                if (!await reader.ReadAsync())
+                {
+                    return NotFound(new { message = $"Loan with ID {id} not found" });
+                }
+
+                assetId = reader.GetInt32(0);
+                dueDate = reader.GetDateTime(1);
+                status = reader.GetString(2);
+            }
+            // Accept: "Active", "0", or "1" as active status
+            var isActive = (status == "Active" || status == "0" || status == "1");
+
+            if (!isActive)
+            {
+                return BadRequest(new { message = $"Loan is not active. Status: {status}" });
             }
 
-            if (loan.Status != LoanStatus.Active)
-            {
-                return BadRequest(new { message = $"Loan is not active. Current status: {loan.Status}" });
-            }
-
-            // Validate staff member if provided
+            // Validate staff if provided
             if (dto.ReceivedByStaffId.HasValue)
             {
                 var staff = await _context.Users.FindAsync(dto.ReceivedByStaffId.Value);
@@ -221,69 +166,108 @@ namespace InventoryMS.Controllers
                 }
             }
 
+            // Calculate overdue
+            var returnDate = DateTime.UtcNow;
+            var overdueDays = 0;
+            if (returnDate > dueDate)
+            {
+                overdueDays = (int)(returnDate - dueDate).TotalDays;
+            }
+
+            var returnConditionValue = dto.ReturnCondition.HasValue ? (int)dto.ReturnCondition.Value : (int?)null;
+
             // Update loan
-            loan.ReturnDate = DateTime.UtcNow;
-            loan.ReturnCondition = dto.ReturnCondition;
-            loan.ReturnNotes = dto.ReturnNotes;
-            loan.ReceivedByStaffId = dto.ReceivedByStaffId;
-            loan.Status = LoanStatus.Returned;
+            await _context.Database.ExecuteSqlRawAsync(
+                 @"UPDATE Loans 
+                  SET ReturnDate = {0}, 
+                      ReturnCondition = {1}, 
+                      ReturnNotes = {2}, 
+                      ReceivedByStaffId = {3}, 
+                      Status = 1,   
+                      OverdueDays = {4}
+                  WHERE Id = {5}",
+                 returnDate, returnConditionValue, dto.ReturnNotes, dto.ReceivedByStaffId, overdueDays, id);
+                        // Update asset
+                        var physicalCondition = dto.ReturnCondition.HasValue ? dto.ReturnCondition.Value.ToString() : null;
 
-            // Calculate overdue days
-            if (loan.ReturnDate > loan.DueDate)
-            {
-                loan.OverdueDays = (loan.ReturnDate.Value - loan.DueDate).Days;
-            }
-
-            // Update asset status and condition
-            loan.Asset.Status = AssetStatus.Available;
-            if (dto.ReturnCondition.HasValue)
-            {
-                loan.Asset.PhysicalCondition = dto.ReturnCondition.Value;
-            }
-            loan.Asset.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
+            await _context.Database.ExecuteSqlRawAsync(
+                @"UPDATE Assets 
+                  SET Status = 'Available', 
+                      PhysicalCondition = COALESCE({0}, PhysicalCondition),
+                      UpdatedAt = {1}
+                  WHERE Id = {2}",
+                physicalCondition, DateTime.UtcNow, assetId);
 
             return Ok(new
             {
                 message = "Equipment returned successfully",
-                overdueDays = loan.OverdueDays,
-                returnDate = loan.ReturnDate
+                overdueDays = overdueDays,
+                returnDate = returnDate
             });
         }
 
         // GET: api/Loans/overdue
         [HttpGet("overdue")]
-        public async Task<ActionResult<IEnumerable<LoanResponseDto>>> GetOverdueLoans()
+        public async Task<IActionResult> GetOverdueLoans()
         {
-            var overdueLoans = await _context.Loans
-                .Include(l => l.User)
-                .Include(l => l.Asset)
-                    .ThenInclude(a => a.Category)
-                .Where(l => l.Status == LoanStatus.Active && l.DueDate < DateTime.UtcNow)
-                .OrderBy(l => l.DueDate)
-                .Select(l => new LoanResponseDto
-                {
-                    Id = l.Id,
-                    AssetId = l.AssetId,
-                    AssetName = l.Asset.Name,
-                    SerialNumber = l.Asset.SerialNumber,
-                    UserId = l.UserId,
-                    UserName = l.User.FullName,
-                    UserUniversityId = l.User.UniversityId,
-                    CheckOutDate = l.CheckOutDate,
-                    DueDate = l.DueDate,
-                    Status = l.Status.ToString(),
-                    IsOverdue = true,
-                    DaysUntilDue = l.DaysUntilDue
-                })
-                .ToListAsync();
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
 
-            return Ok(overdueLoans);
+            using var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT 
+                    l.Id,
+                    l.AssetId,
+                    a.Name as AssetName,
+                    l.UserId,
+                    CONCAT(u.Fname, ' ', u.Lname) as UserName,
+                    l.DueDate,
+                    COALESCE(l.OverdueDays, 0) as OverdueDays
+                FROM Loans l
+                INNER JOIN Assets a ON l.AssetId = a.Id
+                INNER JOIN Users u ON l.UserId = u.Id
+                WHERE COALESCE(l.Status, 'Active') = 'Active' 
+                  AND l.DueDate < NOW()
+                ORDER BY l.DueDate ASC";
+
+            var loans = new List<object>();
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                loans.Add(new
+                {
+                    id = reader.GetInt32(0),
+                    assetId = reader.GetInt32(1),
+                    assetName = reader.GetString(2),
+                    userId = reader.GetInt32(3),
+                    userName = reader.GetString(4),
+                    dueDate = reader.GetDateTime(5),
+                    overdueDays = reader.GetInt32(6)
+                });
+            }
+
+            return Ok(loans);
         }
     }
 
-    // DTOs
+    // Simple DTOs
+    public class LoanSimpleDto
+    {
+        public int Id { get; set; }
+        public int AssetId { get; set; }
+        public string AssetName { get; set; }
+        public string SerialNumber { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string UserUniversityId { get; set; }
+        public DateTime CheckOutDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
+        public string Status { get; set; }
+        public int OverdueDays { get; set; }
+    }
+
     public class CreateLoanDto
     {
         public int AssetId { get; set; }
@@ -298,27 +282,15 @@ namespace InventoryMS.Controllers
         public string ReturnNotes { get; set; }
         public int? ReceivedByStaffId { get; set; }
     }
-
-    public class LoanResponseDto
-    {
-        public int Id { get; set; }
-        public int AssetId { get; set; }
-        public string AssetName { get; set; }
-        public string SerialNumber { get; set; }
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public string UserUniversityId { get; set; }
-        public int? ApprovedByStaffId { get; set; }
-        public string ApprovedByStaffName { get; set; }
-        public DateTime CheckOutDate { get; set; }
-        public DateTime DueDate { get; set; }
-        public DateTime? ReturnDate { get; set; }
-        public string ReturnCondition { get; set; }
-        public string ReturnNotes { get; set; }
-        public int OverdueDays { get; set; }
-        public string ReceivedByStaffName { get; set; }
-        public string Status { get; set; }
-        public bool IsOverdue { get; set; }
-        public int DaysUntilDue { get; set; }
-    }
 }
+
+// had to change to this approach becase of mismatch with database
+//poor db management or something, kept on having issues with null and null numberable
+// difference between sql enums and c# enums major reason on changing to this approach
+
+
+
+
+// to do
+// currently shows all loans when loan is being called, need to add filtering for only active loans
+//
