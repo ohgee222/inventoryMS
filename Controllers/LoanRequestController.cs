@@ -229,14 +229,14 @@ namespace InventoryMS.Controllers
             var staff = await _context.Users.FindAsync(dto.StaffId);
             if (staff == null || (staff.Role != UserRole.Staff && staff.Role != UserRole.Admin))
             {
-                return BadRequest(new { message = "Invalid staff member" });
+                return BadRequest(new { message = "Invalid staff member, please try again" });
             }
 
             // Check asset is still available
             var asset = await _context.Assets.FindAsync(assetId);
             if (asset.Status != AssetStatus.Available)
             {
-                return BadRequest(new { message = "Asset is no longer available" });
+                return BadRequest(new { message = "Asset is no longer available. come back at a later date or try a new item" });
             }
 
             // Update request to Approved
@@ -263,7 +263,7 @@ namespace InventoryMS.Controllers
 
             return Ok(new
             {
-                message = "Loan request approved and loan created",
+                message = "Loan request approved and loan created sucessfully",
                 loanCreated = true,
                 reviewedAt = reviewedAt
             });
@@ -367,4 +367,6 @@ namespace InventoryMS.Controllers
 }
 
 
-//used raw sql to avoid databse error like the loancontroller error 
+//used raw sql to avoid databse error like the loancontroller error
+// should show reject history?
+// or will add reject history in audit?
