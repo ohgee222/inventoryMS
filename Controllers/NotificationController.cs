@@ -23,8 +23,9 @@ namespace InventoryMS.Controllers
         {
             var connection = _context.Database.GetDbConnection();
             await connection.OpenAsync();
-
             using var command = connection.CreateCommand();
+
+          
 
             var whereClauses = new List<string>();
 
@@ -80,6 +81,7 @@ namespace InventoryMS.Controllers
             return Ok(notifications);
         }
 
+
         // GET: api/Notifications/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetNotification(int id)
@@ -105,7 +107,7 @@ namespace InventoryMS.Controllers
 
             if (!await reader.ReadAsync())
             {
-                return NotFound(new { message = $"Notification with ID {id} not found" });
+                return NotFound(new { message = $"Notification with ID number {id} not found" });
             }
 
             var notification = new
@@ -337,3 +339,6 @@ namespace InventoryMS.Controllers
         public int? RelatedAssetId { get; set; }
     }
 }
+
+//kept on using raw sql to avoid c# and db clash of null values(messy db)
+// more modificatiions needed?
