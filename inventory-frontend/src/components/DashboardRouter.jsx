@@ -2,6 +2,7 @@ import { useAuth } from '../auth/AuthContext';
 import StudentDashboard from '../pages/StudentDashboard';
 import StaffAdminDashboard from '../pages/StaffAdminDashboard';
 
+
 const DashboardRouter = () => {
   // Get user object from AuthContext (contains role from decoded JWT)
   const { user } = useAuth();
