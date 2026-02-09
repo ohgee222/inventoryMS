@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "O/CAmbR9aBb1kD59oJeF3NhhEebfZ0dDiaAX/E6mDABEOJgfAulRJNVGOX3Tu+UubEYumfGf819j90VoQOlbLA==",
+  "dgSpecHash": "YdsAk5ovHN8=",
   "success": true,
-  "projectFilePath": "/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/InventoryMS.csproj",
+  "projectFilePath": "/Users/oghoghosaohonba/Desktop/InventoryMS/backend/InventoryMS.csproj",
   "expectedPackageFiles": [
     "/Users/oghoghosaohonba/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
@@ -47,9 +47,9 @@
     "/Users/oghoghosaohonba/.nuget/packages/system.text.encoding/4.3.0/system.text.encoding.4.3.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.text.encodings.web/4.7.2/system.text.encodings.web.4.7.2.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.text.json/4.7.2/system.text.json.4.7.2.nupkg.sha512",
-    "/Users/oghoghosaohonba/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.31/microsoft.aspnetcore.app.ref.6.0.31.nupkg.sha512",
-    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.host.osx-x64/6.0.31/microsoft.netcore.app.host.osx-x64.6.0.31.nupkg.sha512",
-    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.ref/6.0.31/microsoft.netcore.app.ref.6.0.31.nupkg.sha512"
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.ref/6.0.36/microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.36/microsoft.aspnetcore.app.ref.6.0.36.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.host.osx-x64/6.0.36/microsoft.netcore.app.host.osx-x64.6.0.36.nupkg.sha512"
   ],
   "logs": []
 }

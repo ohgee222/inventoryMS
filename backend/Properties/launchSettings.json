@@ -11,7 +11,7 @@
     "InventoryMS": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7028;http://localhost:5064",
+      "applicationUrl": "http://localhost:7028;http://localhost:5064",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

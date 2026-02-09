@@ -2025,11 +2025,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/InventoryMS.csproj",
+      "projectUniqueName": "/Users/oghoghosaohonba/Desktop/InventoryMS/backend/InventoryMS.csproj",
       "projectName": "InventoryMS",
-      "projectPath": "/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/InventoryMS.csproj",
+      "projectPath": "/Users/oghoghosaohonba/Desktop/InventoryMS/backend/InventoryMS.csproj",
       "packagesPath": "/Users/oghoghosaohonba/.nuget/packages/",
-      "outputPath": "/Users/oghoghosaohonba/Desktop/InventoryMS/inventoryMS/InventoryMS/obj/",
+      "outputPath": "/Users/oghoghosaohonba/Desktop/InventoryMS/backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/oghoghosaohonba/.nuget/NuGet/NuGet.Config"
@@ -2038,7 +2038,6 @@
         "net6.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/sdk/7.0.317/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2051,7 +2050,13 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net6.0": {
@@ -2108,15 +2113,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.31, 6.0.31]"
+            "version": "[6.0.36, 6.0.36]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.osx-x64",
-            "version": "[6.0.31, 6.0.31]"
+            "version": "[6.0.36, 6.0.36]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.31, 6.0.31]"
+            "version": "[6.0.36, 6.0.36]"
           }
         ],
         "frameworkReferences": {
@@ -2127,7 +2132,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.317/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/RuntimeIdentifierGraph.json"
       }
     }
   }
