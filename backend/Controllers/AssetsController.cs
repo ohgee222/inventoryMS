@@ -47,14 +47,16 @@ namespace InventoryMS.Controllers
 
         // POST: api/Assets
         [HttpPost]
-        public async Task<ActionResult<Asset>> CreateAsset(CreateAssetDto dto)
+        public async Task<ActionResult<Asset>> CreateAsset([FromBody] CreateAssetDto dto)
         {
-            // Check if category exists
-            var categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var categoryExists = await _context.Categories
+                .AnyAsync(c => c.Id == dto.CategoryId);
+
             if (!categoryExists)
-            {
                 return BadRequest(new { message = "Category does not exist" });
-            }
 
             var asset = new Asset
             {
@@ -62,12 +64,14 @@ namespace InventoryMS.Controllers
                 CategoryId = dto.CategoryId,
                 Description = dto.Description,
                 SerialNumber = dto.SerialNumber,
-                Status = AssetStatus.Available,
-                PhysicalCondition = PhysicalCondition.Good,
                 ItemCondition = dto.ItemCondition,
                 PurchaseDate = dto.PurchaseDate,
                 PurchasePrice = dto.PurchasePrice,
                 Notes = dto.Notes,
+
+                // backend-controlled defaults
+                Status = AssetStatus.Available,
+                PhysicalCondition = PhysicalCondition.Good,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };

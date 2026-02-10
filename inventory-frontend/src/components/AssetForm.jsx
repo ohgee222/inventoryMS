@@ -7,6 +7,11 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
     name: asset?.name || '',
     serialNumber: asset?.serialNumber || '',
     categoryId: asset?.categoryId || '',
+    description: asset?.description || '',
+    itemCondition: asset?.itemCondition || '',
+    purchaseDate: asset?.purchaseDate || '',
+    purchasePrice: asset?.purchasePrice || 0,
+    notes: asset?.notes || '',
     isAvailable: asset?.isAvailable ?? true
   });
   const [categories, setCategories] = useState([]);
@@ -37,10 +42,16 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Convert categoryId to number if it exists
     const submitData = {
-      ...formData,
-      categoryId: formData.categoryId ? parseInt(formData.categoryId) : null
+      name: formData.name,
+      serialNumber: formData.serialNumber,
+      categoryId: formData.categoryId ? parseInt(formData.categoryId, 10) : null,
+      description: formData.description,
+      itemCondition: formData.itemCondition,
+      purchaseDate: formData.purchaseDate || null,
+      purchasePrice: parseFloat(formData.purchasePrice) || 0,
+      notes: formData.notes,
+      isAvailable: formData.isAvailable
     };
     
     onSubmit(submitData);
@@ -109,6 +120,71 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
                 </option>
               ))}
             </select>
+          </label>
+        </div>
+
+        <div style={{ marginBottom: '10px' }}>
+          <label>
+            Description:
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              style={{ marginLeft: '10px', width: '200px' }}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: '10px' }}>
+          <label>
+            Item Condition:
+            <input
+              type="text"
+              name="itemCondition"
+              value={formData.itemCondition}
+              onChange={handleChange}
+              style={{ marginLeft: '10px', width: '200px' }}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: '10px' }}>
+          <label>
+            Purchase Date:
+            <input
+              type="datetime-local"
+              name="purchaseDate"
+              value={formData.purchaseDate}
+              onChange={handleChange}
+              style={{ marginLeft: '10px', width: '200px' }}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: '10px' }}>
+          <label>
+            Purchase Price:
+            <input
+              type="number"
+              step="0.01"
+              name="purchasePrice"
+              value={formData.purchasePrice}
+              onChange={handleChange}
+              style={{ marginLeft: '10px', width: '200px' }}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: '10px' }}>
+          <label>
+            Notes:
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              style={{ marginLeft: '10px', width: '200px' }}
+            />
           </label>
         </div>
 

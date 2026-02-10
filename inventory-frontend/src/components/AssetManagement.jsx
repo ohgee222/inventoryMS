@@ -38,27 +38,34 @@ const AssetManagement = () => {
 
   const handleCreate = async (assetData) => {
     setError(null);
+    
+    // SEE WHAT YOU'RE SENDING
+    console.log('Sending asset data:', assetData);
+    console.log('Stringified:', JSON.stringify(assetData));
+    
     try {
-      const response = await fetch('http://localhost:7028/api/Assets', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(assetData)
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create asset');
-      }
-      
-      await fetchAssets();
-      setShowCreateForm(false);
+        const response = await fetch('http://localhost:7028/api/Assets', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(assetData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API Error Response:', errorData);
+            throw new Error(errorData.message || JSON.stringify(errorData));
+        }
+
+        await fetchAssets();
+        setShowCreateForm(false);
     } catch (error) {
-      console.error(error);
-      setError('Failed to create asset. Please try again.');
+        console.error('Create asset error:', error);
+        setError(error.message || 'Failed to create asset');
     }
-  };
+};
 
   const handleUpdate = async (id, assetData) => {
     setError(null);
