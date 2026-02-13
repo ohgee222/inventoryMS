@@ -9,7 +9,15 @@ const AssetManagement = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingAsset, setEditingAsset] = useState(null);
   const [error, setError] = useState(null);
-
+  
+  const getStatusLabel = (status) => {
+    const labels = ['Available', 'Checked Out', 'Reserved'];
+    return labels[status] || 'Unknown';
+  };
+  const getConditionLabel = (condition) => {
+    const labels = ['Good', 'Fair', 'Poor', 'In Repair', 'Retired'];
+    return labels[condition] || 'Unknown';
+  };
   useEffect(() => {
     fetchAssets();
   }, [user.token]);
@@ -68,29 +76,48 @@ const AssetManagement = () => {
 };
 
   const handleUpdate = async (id, assetData) => {
-    setError(null);
-    try {
-      const response = await fetch(`http://localhost:7028/api/Assets/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(assetData)
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update asset');
-      }
-      
-      await fetchAssets();
-      setEditingAsset(null);
-    } catch (error) {
-      console.error(error);
-      setError('Failed to update asset. Please try again.');
+  setError(null);
+  
+  console.log('UPDATE - Asset ID:', id);
+  console.log('UPDATE - Sending data:', assetData);
+  console.log('UPDATE - Stringified:', JSON.stringify(assetData));
+  
+  try {
+    const response = await fetch(`http://localhost:7028/api/Assets/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${user.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(assetData)
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('UPDATE - API Error:', errorData);
+      throw new Error('Failed to update asset');
     }
-  };
+    // 
+    // Attempt to parse JSON but tolerate empty/no-body responses.
+    try {
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const result = await response.json();
+        console.log('UPDATE - API Response:', result);
+      } else {
+        console.log('UPDATE - No JSON response (status:', response.status, ')');
+      }
+    } catch (err) {
+      console.log('UPDATE - Ignoring response parse error:', err);
+    }
 
+    await fetchAssets();
+    setEditingAsset(null);
+  } catch (error) {
+    console.error(error);
+    setError('Failed to update asset. Please try again.');
+  }
+};
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this asset?')) {
       return;
@@ -147,36 +174,38 @@ const AssetManagement = () => {
 
       <table border="1">
         <thead>
-          <tr>
-            <th>Name</th>
-            <th>Serial</th>
-            <th>Category</th>
-            <th>Available</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {assets.length === 0 ? (
-            <tr>
-              <td colSpan="5" style={{ textAlign: 'center' }}>
-                No assets found. Add one to get started.
-              </td>
-            </tr>
-          ) : (
-            assets.map(asset => (
-              <tr key={asset.id}>
-                <td>{asset.name}</td>
-                <td>{asset.serialNumber}</td>
-                <td>{asset.category?.name ?? 'Uncategorised'}</td>
-                <td>{asset.isAvailable ? 'Yes' : 'No'}</td>
-                <td>
-                  <button onClick={() => setEditingAsset(asset)}>Edit</button>
-                  <button onClick={() => handleDelete(asset.id)}>Delete</button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
+  <tr>
+    <th>Name</th>
+    <th>Serial</th>
+    <th>Category</th>
+    <th>Status</th>  {/* ← Changed from "Available" */}
+    <th>Condition</th>  {/* ← Added */}
+    <th>Actions</th>
+  </tr>
+</thead>
+<tbody>
+  {assets.length === 0 ? (
+    <tr>
+      <td colSpan="6" style={{ textAlign: 'center' }}>  {/* ← Changed from 5 to 6 */}
+        No assets found. Add one to get started.
+      </td>
+    </tr>
+  ) : (
+    assets.map(asset => (
+      <tr key={asset.id}>
+        <td>{asset.name}</td>
+        <td>{asset.serialNumber}</td>
+        <td>{asset.category?.name ?? 'Uncategorised'}</td>
+        <td>{getStatusLabel(asset.status)}</td>  {/* ← Changed */}
+        <td>{getConditionLabel(asset.physicalCondition)}</td>  {/* ← Added */}
+        <td>
+          <button onClick={() => setEditingAsset(asset)}>Edit</button>
+          <button onClick={() => handleDelete(asset.id)}>Delete</button>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
       </table>
     </div>
   );

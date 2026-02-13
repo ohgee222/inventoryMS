@@ -8,11 +8,11 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
     serialNumber: asset?.serialNumber || '',
     categoryId: asset?.categoryId || '',
     description: asset?.description || '',
-    itemCondition: asset?.itemCondition || '',
+    physicalCondition: asset?.physicalCondition ?? 0,
     purchaseDate: asset?.purchaseDate || '',
     purchasePrice: asset?.purchasePrice || 0,
     notes: asset?.notes || '',
-    isAvailable: asset?.isAvailable ?? true
+    status: asset?.status ?? 0
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,11 +47,12 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
       serialNumber: formData.serialNumber,
       categoryId: formData.categoryId ? parseInt(formData.categoryId, 10) : null,
       description: formData.description,
-      itemCondition: formData.itemCondition,
+      // Ensure the backend fields match: send numeric enums for condition and status
+      physicalCondition: parseInt(formData.physicalCondition, 10) || 0,
+      status: parseInt(formData.status, 10) || 0,
       purchaseDate: formData.purchaseDate || null,
       purchasePrice: parseFloat(formData.purchasePrice) || 0,
-      notes: formData.notes,
-      isAvailable: formData.isAvailable
+      notes: formData.notes
     };
     
     onSubmit(submitData);
@@ -136,18 +137,23 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
           </label>
         </div>
 
-        <div style={{ marginBottom: '10px' }}>
-          <label>
-            Item Condition:
-            <input
-              type="text"
-              name="itemCondition"
-              value={formData.itemCondition}
-              onChange={handleChange}
-              style={{ marginLeft: '10px', width: '200px' }}
-            />
-          </label>
-        </div>
+       <div style={{ marginBottom: '10px' }}>
+  <label>
+    Physical Condition:
+    <select
+      name="physicalCondition"
+      value={formData.physicalCondition}
+      onChange={handleChange}
+      style={{ marginLeft: '10px', width: '200px' }}
+    >
+      <option value="0">Good</option>
+      <option value="1">Fair</option>
+      <option value="2">Poor</option>
+      <option value="3">In Repair</option>
+      <option value="4">Retired</option>
+    </select>
+  </label>
+</div>
 
         <div style={{ marginBottom: '10px' }}>
           <label>
@@ -189,16 +195,20 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
         </div>
 
         <div style={{ marginBottom: '10px' }}>
-          <label>
-            <input
-              type="checkbox"
-              name="isAvailable"
-              checked={formData.isAvailable}
-              onChange={handleChange}
-            />
-            Available
-          </label>
-        </div>
+  <label>
+        Status:
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          style={{ marginLeft: '10px', width: '200px' }}
+        >
+          <option value="0">Available</option>
+          <option value="1">Checked Out</option>
+          <option value="2">Reserved</option>
+        </select>
+      </label>
+    </div>
 
         <div>
           <button type="submit" style={{ marginRight: '10px' }}>
