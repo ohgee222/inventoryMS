@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import AssetForm from './AssetForm';
 
+
+/*
+TO DO;
+RESTRICT ACCESS TO STAFF/ADMIN ONLY
+RESTRIC EDIT/DELETE TO ADMIN ONLY (STUDENTS AND STAFF CAN VIEW ONLY)
+
+*/
 const AssetManagement = () => {
   const { user } = useAuth();
   const [assets, setAssets] = useState([]);
