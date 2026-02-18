@@ -49,7 +49,7 @@ const LoanRequests = () => {
           'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ staffId: user.id })
+        body: JSON.stringify({ staffId: user.userId})
       });
 
       if (!response.ok) {
@@ -91,10 +91,10 @@ const LoanRequests = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          staffId: user.id,
+          staffId: user.userId,
           rejectionReason: rejectionReason.trim()
         })
-      });
+      }) ;
 
       if (!response.ok) {
         const errorData = await response.json();
