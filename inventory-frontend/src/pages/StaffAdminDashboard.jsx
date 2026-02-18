@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AssetManagement from '../components/AssetManagement';
 import LoanRequests from '../components/LoanRequests';
+import ActiveLoans from '../components/ActiveLoans';
 const StaffAdminDashboard = () => {
   const { user, logout } = useAuth();
   const [userDetails, setUserDetails] = useState(null);
@@ -86,6 +87,7 @@ const StaffAdminDashboard = () => {
           <section>
             <h2>Active Loans</h2>
             {/* TODO: Component for active loans */}
+            <ActiveLoans />
           </section>
         )}
 
