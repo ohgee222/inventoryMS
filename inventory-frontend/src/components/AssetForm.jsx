@@ -40,23 +40,22 @@ const AssetForm = ({ asset, onSubmit, onCancel }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const submitData = {
-      name: formData.name,
-      serialNumber: formData.serialNumber,
-      categoryId: formData.categoryId ? parseInt(formData.categoryId, 10) : null,
-      description: formData.description,
-      // Ensure the backend fields match: send numeric enums for condition and status
-      physicalCondition: parseInt(formData.physicalCondition, 10) || 0,
-      status: parseInt(formData.status, 10) || 0,
-      purchaseDate: formData.purchaseDate || null,
-      purchasePrice: parseFloat(formData.purchasePrice) || 0,
-      notes: formData.notes
-    };
-    
-    onSubmit(submitData);
+  e.preventDefault();
+  
+  const submitData = {
+    name: formData.name,
+    serialNumber: formData.serialNumber,
+    categoryId: formData.categoryId ? parseInt(formData.categoryId, 10) : null,
+    description: formData.description,
+    itemCondition: "Good",  // Backend ignores physicalCondition on create, hardcodes to Good anyway
+    purchaseDate: formData.purchaseDate || null,
+    purchasePrice: parseFloat(formData.purchasePrice) || 0,
+    notes: formData.notes
+    // Don't send physicalCondition or status - backend doesn't accept them on create
   };
+  
+  onSubmit(submitData);
+};
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
