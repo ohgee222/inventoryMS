@@ -72,16 +72,13 @@ const StaffAdminDashboard = () => {
               <div style={{
                 width: '40px',
                 height: '40px',
-                backgroundColor: '#2563eb',
+                backgroundColor: 'gray',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2">
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
+               
               </div>
               <div>
                 <h1 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#111827' }}>
@@ -243,12 +240,7 @@ const StaffAdminDashboard = () => {
         {activeSection === 'assets' && <AssetManagement />}
         {activeSection === 'loanRequests' && <LoanRequests />}
         {activeSection === 'activeLoans' && <ActiveLoans />}
-        {isAdmin && activeSection === 'users' && (
-          <div>
-            <h2>User Management</h2>
-            <p>User management coming soon...</p>
-          </div>
-        )}
+       
       </main>
     </div>
   );
