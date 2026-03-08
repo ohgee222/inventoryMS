@@ -22,7 +22,7 @@ const fetchActiveLoans = async () => {
  setLoading(true);
  setError(null);
  try {
-   const response = await fetch('http://localhost:7028/api/Loans/active', {
+   const response = await fetch('http://localhost:7028/api/Loans', {
      headers: {
        Authorization: `Bearer ${user.token}`
      }
@@ -42,36 +42,44 @@ const fetchActiveLoans = async () => {
     }
     };
 
-    const handleReturn = async (loanId) => {
-        if(!window.confirm('Are you sure you want to mark this loan as returned?')) return
-        setActionLoading(true);
-        setError(null);
-        setSuccessMessage(null);
-        try {
-          const response = await fetch(`http://localhost:7028/api/Loans/${loanId}/return`, {
-            method: 'PUT',
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({recievedByStaffId: user.userId}) // no return condition
-          });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to return loan');
-            }
-            const result = await response.json();
-            console.log('Return success: ', result);
+   const handleReturn = async (loanId) => {
+  if(!window.confirm('Are you sure you want to mark this loan as returned?')) return;
+  
+  setActionLoading(true);
+  setError(null);
+  setSuccessMessage(null);
+  
+  try {
+    const response = await fetch(`http://localhost:7028/api/Loans/${loanId}/return`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        receivedByStaffId: parseInt(user.userId, 10),
+        returnNotes: ""  // ← Add this
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('API Error:', errorData);
+      throw new Error(errorData.message || 'Failed to return loan');
+    }
+    
+    const result = await response.json();
+    console.log('Return success:', result);
 
-            setSuccessMessage(`Equipment returned successfully. ${result.overdueDays > 0 ? `Was ${result.overdueDays} days overdue.` : ''}`);    
-            await fetchActiveLoans(); }// Refresh the list after returning
-        catch (error) {
-                console.error('Return error:', error);
-                setError(error.message || 'Failed to process return ');
-        }finally {
-                setActionLoading(false);
-            }
-        };
+    setSuccessMessage(`Equipment returned successfully. ${result.overdueDays > 0 ? `Was ${result.overdueDays} days overdue.` : ''}`);    
+    await fetchActiveLoans();
+  } catch (error) {
+    console.error('Return error:', error);
+    setError(error.message || 'Failed to process return');
+  } finally {
+    setActionLoading(false);
+  }
+};
         const isOverdue=(dueDate) => {
             return new Date(dueDate) < new Date();
         };

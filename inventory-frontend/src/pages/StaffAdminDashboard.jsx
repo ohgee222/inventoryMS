@@ -4,20 +4,21 @@ import { useState, useEffect } from 'react';
 import AssetManagement from '../components/AssetManagement';
 import LoanRequests from '../components/LoanRequests';
 import ActiveLoans from '../components/ActiveLoans';
+import Dashboard from '../components/Dashboard';
+import UserManagement from '../components/UserManagement';
+
 const StaffAdminDashboard = () => {
   const { user, logout } = useAuth();
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState(null); // Track active section
+  const [activeSection, setActiveSection] = useState('dashboard');
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(`http://localhost:7028/api/Users/${user.userId}`, {
-          headers: {
-            'Authorization': `Bearer ${user.token}`
-          }
+          headers: { 'Authorization': `Bearer ${user.token}` }
         });
         if (response.ok) {
           const data = await response.json();
@@ -29,6 +30,7 @@ const StaffAdminDashboard = () => {
         setLoading(false);
       }
     };
+
     if (user?.userId) {
       fetchUserDetails();
     }
@@ -45,74 +47,224 @@ const StaffAdminDashboard = () => {
     : user?.userId;
 
   return (
-    <div className="dashboard">
-      <header>
-        <h1>{isAdmin ? 'Admin' : 'Staff'} Dashboard</h1>
-        <div>
-          <span>Welcome, {loading ? 'Loading...' : displayName}</span><br />
-          <br />
-          <button onClick={handleLogout}>Logout</button><br />
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+      {/* Header */}
+      <header style={{
+        backgroundColor: '#ffffff',
+        borderBottom: '1px solid #e5e7eb',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10
+      }}>
+        <div style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 24px'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '16px 0'
+          }}>
+            {/* Logo and Title */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: '#2563eb',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+              <div>
+                <h1 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#111827' }}>
+                  IT Equipment Management
+                </h1>
+                <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
+                  University of Hull - {isAdmin ? 'Admin' : 'Staff'} Portal
+                </p>
+              </div>
+            </div>
+
+            {/* User Info and Logout */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ margin: 0, fontSize: '14px', color: '#111827', fontWeight: '500' }}>
+                  {loading ? 'Loading...' : displayName}
+                </p>
+                <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>
+                  {isAdmin ? 'Administrator' : 'Staff Member'}
+                </p>
+              </div>
+              <button onClick={handleLogout} style={{
+                padding: '8px 16px',
+                backgroundColor: '#ffffff',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </header>
-      <br />
-      <nav>
-        <button onClick={() => setActiveSection('assets')}>Asset Management</button><br /><br />
-        <button onClick={() => setActiveSection('loanRequests')}>Loan Requests</button><br /><br />
-        <button onClick={() => setActiveSection('activeLoans')}>Active Loans</button><br /><br />
-        {isAdmin && (
-          <>
-            <button onClick={() => setActiveSection('users')}>User Management</button><br /><br />
-            <button onClick={() => setActiveSection('reports')}>System Reports</button><br /><br />
-          </>
-        )}
-      </nav>
 
-      <main>
-        {activeSection === 'assets' && (
-          <section>
-            <h2>Asset Management</h2>
-            <AssetManagement />
-          </section>
-        )}
+      {/* Main Content */}
+      <main style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '32px 24px'
+      }}>
+        {/* Tab Navigation */}
+        <div style={{
+          backgroundColor: '#f3f4f6',
+          borderRadius: '8px',
+          padding: '4px',
+          display: 'inline-flex',
+          gap: '4px',
+          marginBottom: '32px'
+        }}>
+          <button
+            onClick={() => setActiveSection('dashboard')}
+            style={{
+              ...tabButtonStyle,
+              backgroundColor: activeSection === 'dashboard' ? '#ffffff' : 'transparent',
+              boxShadow: activeSection === 'dashboard' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+              fontWeight: activeSection === 'dashboard' ? '600' : '500'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Dashboard
+          </button>
 
-        {activeSection === 'loanRequests' && (
-          <section>
-            <h2>Loan Requests</h2>
-            {/* TODO: Component for loan requests */}
-            <LoanRequests />
-          </section>
-        )}
+          <button
+            onClick={() => setActiveSection('assets')}
+            style={{
+              ...tabButtonStyle,
+              backgroundColor: activeSection === 'assets' ? '#ffffff' : 'transparent',
+              boxShadow: activeSection === 'assets' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+              fontWeight: activeSection === 'assets' ? '600' : '500'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            Equipment
+          </button>
 
-        {activeSection === 'activeLoans' && (
-          <section>
-            <h2>Active Loans</h2>
-            {/* TODO: Component for active loans */}
-            <ActiveLoans />
-          </section>
-        )}
+          <button
+            onClick={() => setActiveSection('loanRequests')}
+            style={{
+              ...tabButtonStyle,
+              backgroundColor: activeSection === 'loanRequests' ? '#ffffff' : 'transparent',
+              boxShadow: activeSection === 'loanRequests' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+              fontWeight: activeSection === 'loanRequests' ? '600' : '500'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Loan Requests
+          </button>
 
+          <button
+            onClick={() => setActiveSection('activeLoans')}
+            style={{
+              ...tabButtonStyle,
+              backgroundColor: activeSection === 'activeLoans' ? '#ffffff' : 'transparent',
+              boxShadow: activeSection === 'activeLoans' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+              fontWeight: activeSection === 'activeLoans' ? '600' : '500'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Active Loans
+          </button>
+
+          {isAdmin && (
+            <button
+              onClick={() => setActiveSection('users')}
+              style={{
+                ...tabButtonStyle,
+                backgroundColor: activeSection === 'users' ? '#ffffff' : 'transparent',
+                boxShadow: activeSection === 'users' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                fontWeight: activeSection === 'users' ? '600' : '500'
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Users
+            </button>
+          )}
+        </div>
+            {isAdmin && activeSection === 'users' && (
+  <section>
+    <UserManagement />
+  </section>
+)}
+        {/* Content Sections */}
+        {activeSection === 'dashboard' && <Dashboard />}
+        {activeSection === 'assets' && <AssetManagement />}
+        {activeSection === 'loanRequests' && <LoanRequests />}
+        {activeSection === 'activeLoans' && <ActiveLoans />}
         {isAdmin && activeSection === 'users' && (
-          <section>
-            <h2>User Management</h2>
-            {/* TODO: Component for user management */}
-          </section>
-        )}
-
-        {isAdmin && activeSection === 'reports' && (
-          <section>
-            <h2>System Reports</h2>
-            {/* TODO: Component for reports */}
-          </section>
-        )}
-
-        {!activeSection && (
           <div>
-            <p>Select a section from the menu above to get started.</p>
+            <h2>User Management</h2>
+            <p>User management coming soon...</p>
           </div>
         )}
       </main>
     </div>
   );
+};
+
+const tabButtonStyle = {
+  padding: '10px 20px',
+  border: 'none',
+  borderRadius: '6px',
+  fontSize: '14px',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  transition: 'all 0.2s',
+  color: '#374151'
 };
 
 export default StaffAdminDashboard;
