@@ -1,3 +1,40 @@
 ﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default">
+  <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
   <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AssetHistoryController.cs">
+    <Files>
+      <File FileName="Models/Enums/LoanRequestStatus.cs" />
+      <File FileName="Models/Enums/LoanStatus.cs" />
+      <File FileName="Models/Entities/LoanRequest.cs" />
+      <File FileName="Controllers/LoansController.cs" />
+      <File FileName="Models/Entities/Loan.cs" />
+      <File FileName="Controllers/AssetHistoryController.cs" Line="17" Column="32" />
+      <File FileName="Models/Entities/Notification.cs" />
+      <File FileName="Controllers/AssetsController.cs" />
+      <File FileName="Models/Entities/AssetHistory.cs" />
+      <File FileName="Models/Enums/AssetStatus.cs" />
+      <File FileName="Pages/_ViewImports.cshtml" />
+      <File FileName="Controllers/AuthController.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="InventoryMS">
+            <Node name="InventoryMS">
+              <Node name="ConnectedServicesFolder" selected="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="Enums" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
 </Properties>
