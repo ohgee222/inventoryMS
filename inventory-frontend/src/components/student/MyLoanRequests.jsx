@@ -13,24 +13,35 @@ const MyLoanRequests = () => {
   }, [user.token]);
 
   const fetchMyRequests = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('http://localhost:7028/api/LoanRequests', {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-      if (!response.ok) throw new Error('Failed to fetch requests');
-      const data = await response.json();
-      // Filter to only this student's requests
-      const myRequests = data.filter(r => r.userId === parseInt(user.userId, 10));
-      setRequests(myRequests);
-    } catch (error) {
-      console.error('Fetch error:', error);
-      setError('Failed to load requests. Please try again.');
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  setError(null);
+  try {
+    // Add empty status parameter to avoid validation error
+    const response = await fetch('http://localhost:7028/api/LoanRequests?status=null', {
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('API Error:', errorData);
+      throw new Error('Failed to fetch requests');
     }
-  };
+    
+    const data = await response.json();
+    console.log('All requests:', data);
+    
+    // Filter to only this student's requests
+    const myRequests = data.filter(r => r.userId === parseInt(user.userId, 10));
+    console.log('My requests:', myRequests);
+    
+    setRequests(myRequests);
+  } catch (error) {
+    console.error('Fetch error:', error);
+    setError('Failed to load requests. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const formatDate = (isoDate) => {
     return new Date(isoDate).toLocaleDateString('en-GB', {
