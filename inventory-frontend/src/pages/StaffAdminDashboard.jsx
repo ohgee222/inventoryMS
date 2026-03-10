@@ -6,6 +6,7 @@ import LoanRequests from '../components/LoanRequests';
 import ActiveLoans from '../components/ActiveLoans';
 import Dashboard from '../components/Dashboard';
 import UserManagement from '../components/UserManagement';
+import CategoryManagement from '../components/CategoryManagement';
 
 const StaffAdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -210,6 +211,24 @@ const StaffAdminDashboard = () => {
             Active Loans
           </button>
 
+          {/*  THIS CATEGORIES BUTTON */}
+{isAdmin && (
+  <button
+    onClick={() => setActiveSection('categories')}
+    style={{
+      ...tabButtonStyle,
+      backgroundColor: activeSection === 'categories' ? '#ffffff' : 'transparent',
+      boxShadow: activeSection === 'categories' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+      fontWeight: activeSection === 'categories' ? '600' : '500'
+    }}
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 7h16M4 12h16M4 17h16"></path>
+    </svg>
+    Categories
+  </button>
+)}
+
           {isAdmin && (
             <button
               onClick={() => setActiveSection('users')}
@@ -228,8 +247,11 @@ const StaffAdminDashboard = () => {
               </svg>
               Users
             </button>
+            
+
           )}
         </div>
+        {isAdmin && activeSection === 'categories' && <CategoryManagement />}
             {isAdmin && activeSection === 'users' && (
   <section>
     <UserManagement />

@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import AssetForm from './AssetForm';
 
+
 const AssetManagement = () => {
   const { user } = useAuth();
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
+ 
+  
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingAsset, setEditingAsset] = useState(null);
   const [error, setError] = useState(null);
