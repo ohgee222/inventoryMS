@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "mPdl3sLOhNfjn5cxZ4VLUcSoWdmyzHhfZ+Gsah0oQ9ehreJ4Ss9Rn4bcdOfjaCrtlmnUhH1GyKVg5i5arPB8Uw==",
+  "dgSpecHash": "ONrtkgr/QEU=",
   "success": true,
   "projectFilePath": "/Users/oghoghosaohonba/Desktop/InventoryMS/backend/InventoryMS.csproj",
   "expectedPackageFiles": [
     "/Users/oghoghosaohonba/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/bouncycastle.cryptography/2.6.2/bouncycastle.cryptography.2.6.2.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/mailkit/4.15.1/mailkit.4.15.1.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/6.0.36/microsoft.aspnetcore.authentication.jwtbearer.6.0.36.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.entityframeworkcore/6.0.36/microsoft.entityframeworkcore.6.0.36.nupkg.sha512",
@@ -33,6 +35,7 @@
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.targets/1.1.0/microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/mimekit/4.15.1/mimekit.4.15.1.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/mysqlconnector/2.1.2/mysqlconnector.2.1.2.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/pomelo.entityframeworkcore.mysql/6.0.3/pomelo.entityframeworkcore.mysql.6.0.3.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
@@ -41,15 +44,19 @@
     "/Users/oghoghosaohonba/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.collections.immutable/6.0.1/system.collections.immutable.6.0.1.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.diagnostics.diagnosticsource/6.0.2/system.diagnostics.diagnosticsource.6.0.2.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/system.formats.asn1/8.0.1/system.formats.asn1.8.0.1.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.identitymodel.tokens.jwt/6.35.0/system.identitymodel.tokens.jwt.6.35.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.runtime/4.3.0/system.runtime.4.3.0.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.security.cryptography.cng/4.5.0/system.security.cryptography.cng.4.5.0.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/system.security.cryptography.pkcs/8.0.1/system.security.cryptography.pkcs.8.0.1.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.text.encoding/4.3.0/system.text.encoding.4.3.0.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/system.text.encoding.codepages/8.0.0/system.text.encoding.codepages.8.0.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.text.encodings.web/4.7.2/system.text.encodings.web.4.7.2.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/system.text.json/4.7.2/system.text.json.4.7.2.nupkg.sha512",
-    "/Users/oghoghosaohonba/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.31/microsoft.aspnetcore.app.ref.6.0.31.nupkg.sha512",
-    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.host.osx-x64/6.0.31/microsoft.netcore.app.host.osx-x64.6.0.31.nupkg.sha512",
-    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.ref/6.0.31/microsoft.netcore.app.ref.6.0.31.nupkg.sha512"
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.ref/6.0.36/microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.36/microsoft.aspnetcore.app.ref.6.0.36.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/microsoft.netcore.app.host.osx-x64/6.0.36/microsoft.netcore.app.host.osx-x64.6.0.36.nupkg.sha512"
   ],
   "logs": []
 }

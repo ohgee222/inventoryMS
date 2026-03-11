@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InventoryMS.Services;
+using Microsoft.EntityFrameworkCore;
 using InventoryMS.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -49,6 +50,11 @@ builder.Services.AddDbContext<InventoryDb>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+
+// Email notification services
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddHostedService<OverdueCheckService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import AssetForm from './AssetForm';
-
+import CategoryManagement from './CategoryManagement';
 
 const AssetManagement = () => {
   const { user } = useAuth();
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
- 
-  
+  const [showCategoryManagement, setShowCategoryManagement] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingAsset, setEditingAsset] = useState(null);
   const [error, setError] = useState(null);
+  
+  const isAdmin = user?.role === 'Admin';
   
   const getStatusLabel = (status) => {
     const labels = ['Available', 'Checked Out', 'Reserved'];
@@ -138,22 +139,56 @@ const AssetManagement = () => {
         </div>
       )}
       
-      <button 
-        onClick={() => setShowCreateForm(true)}
-        style={{
-          padding: '8px 16px',
-          marginBottom: '15px',
-          backgroundColor: '#2563eb',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontSize: '14px'
-        }}
-      >
-        Add New Asset
-      </button>
+      {/* Button Group */}
+      <div style={{ marginBottom: '15px' }}>
+        <button 
+          onClick={() => setShowCreateForm(true)}
+          style={{
+            padding: '8px 16px',
+            marginRight: '10px',
+            backgroundColor: '#2b2b2b',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Add New Asset
+        </button>
+        
+        {isAdmin && (
+          <button 
+            onClick={() => setShowCategoryManagement(!showCategoryManagement)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: showCategoryManagement ? '#6b7280' : '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            {showCategoryManagement ? 'Hide Categories' : 'Manage Categories'}
+          </button>
+        )}
+      </div>
 
+      {/* Category Management Section */}
+      {showCategoryManagement && isAdmin && (
+        <div style={{
+          border: '2px solid #10b981',
+          borderRadius: '8px',
+          padding: '20px',
+          marginBottom: '30px',
+          backgroundColor: '#f5f5f5'
+        }}>
+          <CategoryManagement />
+        </div>
+      )}
+
+      {/* Asset Forms */}
       {showCreateForm && (
         <AssetForm 
           onSubmit={handleCreate} 
@@ -169,6 +204,7 @@ const AssetManagement = () => {
         />
       )}
 
+      {/* Assets Table */}
       <table border="1" style={{ 
         margin: '0 auto',
         borderCollapse: 'collapse',
@@ -206,7 +242,7 @@ const AssetManagement = () => {
                     style={{
                       padding: '6px 12px',
                       marginRight: '8px',
-                      backgroundColor: '#3b82f6',
+                      backgroundColor: '#2b2b2b',
                       color: 'white',
                       border: 'none',
                       borderRadius: '4px',
