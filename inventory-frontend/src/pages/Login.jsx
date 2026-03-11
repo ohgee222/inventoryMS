@@ -56,12 +56,12 @@ const Login = () => {
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)} // Update state on input change
-            required
-            disabled={loading} // Disable input during API call
+          type="text"
+        placeholder="Email or Student Number"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        
           />
         </div>
 

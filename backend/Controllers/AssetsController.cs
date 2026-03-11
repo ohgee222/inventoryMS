@@ -4,6 +4,7 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using System.Diagnostics;
+using InventoryMS.Controllers;
 
 namespace InventoryMS.Controllers
 {
@@ -51,12 +52,23 @@ namespace InventoryMS.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            
+                    // CHECK FOR DUPLICATE SERIAL NUMBER
+            var existingSerial = await _context.Assets
+                .FirstOrDefaultAsync(a => a.SerialNumber == dto.SerialNumber);
+            
+            if (existingSerial != null)
+            {
+                return BadRequest(new { message = $"Serial number '{dto.SerialNumber}' already exists" });
+            }
 
+            // Check category exists
             var categoryExists = await _context.Categories
                 .AnyAsync(c => c.Id == dto.CategoryId);
 
             if (!categoryExists)
                 return BadRequest(new { message = "Category does not exist" });
+   
 
             var asset = new Asset
             {
@@ -92,6 +104,17 @@ namespace InventoryMS.Controllers
             {
                 return NotFound(new { message = $"Asset with ID {id} not found" });
             }
+             // IF UPDATING SERIAL NUMBER, CHECK FOR DUPLICATES
+                if (!string.IsNullOrEmpty(dto.SerialNumber) && dto.SerialNumber != asset.SerialNumber)
+                {
+                    var existingSerial = await _context.Assets
+                        .FirstOrDefaultAsync(a => a.SerialNumber == dto.SerialNumber);
+                    
+                    if (existingSerial != null)
+                    {
+                        return BadRequest(new { message = $"Serial number '{dto.SerialNumber}' already exists" });
+                    }
+                }
 
             // Update fields
             if (!string.IsNullOrEmpty(dto.Name))

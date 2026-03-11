@@ -144,6 +144,24 @@ namespace InventoryMS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateLoanRequest(CreateLoanRequestDto dto)
         {
+
+            // VALIDATE DATES
+            if (dto.RequestedStartDate < DateTime.Today)
+            {
+                return BadRequest(new { message = "Start date cannot be in the past" });
+            }
+
+            if (dto.RequestedEndDate <= dto.RequestedStartDate)
+            {
+                return BadRequest(new { message = "End date must be after start date" });
+            }
+
+            //  Limit loan duration to certain  period, 30 days
+            var loanDuration = (dto.RequestedEndDate - dto.RequestedStartDate).Days;
+            if (loanDuration > 30)
+            {
+                return BadRequest(new { message = "Maximum loan duration is 30 days" });
+            }
             // Validate asset exists
             var asset = await _context.Assets.FindAsync(dto.AssetId);
             if (asset == null)

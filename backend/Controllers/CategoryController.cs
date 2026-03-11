@@ -46,6 +46,7 @@ namespace InventoryMS.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> CreateCategory(CreateCategoryDto dto)
         {
+            
             // create category with dto data
             var category = new Category
             {

@@ -27,53 +27,47 @@ namespace InventoryMS.Controllers
 
         // POST: api/auth/login
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto dto)
-        {
-            // Validate email format
-            if (!EmailValidator.IsValidUniversityEmail(dto.Email))
-            {
-                return Unauthorized(new { message = "Invalid email format" });
-            }
-            
-            // Find user by email
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+public async Task<IActionResult> Login(LoginDto dto)
+{
+    // Try to find user by email OR university ID
+    var user = await _context.Users
+        .FirstOrDefaultAsync(u => u.Email == dto.Identifier || u.UniversityId == dto.Identifier);
 
-            if (user == null)
-            {
-                return Unauthorized(new { message = "Invalid email or password" });
-            }
+    if (user == null)
+    {
+        return Unauthorized(new { message = "Invalid credentials" });
+    }
 
-            // Verify password
-            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-            {
-                return Unauthorized(new { message = "Invalid email or password" });
-            }
+    // Verify password
+    if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+    {
+        return Unauthorized(new { message = "Invalid credentials" });
+    }
 
-            // Check if account is active
-            if (!user.IsActive)
-            {
-                return Unauthorized(new { message = "Account is inactive. Please contact admin." });
-            }
+    // Check if account is active
+    if (!user.IsActive)
+    {
+        return Unauthorized(new { message = "Account is inactive. Please contact admin." });
+    }
 
-            // Update last login
-            await _context.Database.ExecuteSqlRawAsync(
-                "UPDATE Users SET LastLoginAt = {0} WHERE Id = {1}",
-                DateTime.UtcNow, user.id);
+    // Update last login
+    await _context.Database.ExecuteSqlRawAsync(
+        "UPDATE Users SET LastLoginAt = {0} WHERE Id = {1}",
+        DateTime.UtcNow, user.id);
 
-            // Generate JWT token
-            var token = GenerateJwtToken(user);
+    // Generate JWT token
+    var token = GenerateJwtToken(user);
 
-            return Ok(new
-            {
-                token = token,
-                userId = user.id,
-                email = user.Email,
-                fullName = $"{user.Fname} {user.Lname}",
-                role = user.Role.ToString(),
-                message = "Login successful"
-            });
-        }
+    return Ok(new
+    {
+        token = token,
+        userId = user.id,
+        email = user.Email,
+        fullName = $"{user.Fname} {user.Lname}",
+        role = user.Role.ToString(),
+        message = "Login successful"
+    });
+}
 
         // POST: api/auth/register (Optional - for creating new accounts)
         [HttpPost("register")]
@@ -163,11 +157,11 @@ namespace InventoryMS.Controllers
     }
 
     // DTOs
-    public class LoginDto
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+  public class LoginDto
+{
+    public string Identifier { get; set; }  // Changed from Email to Identifier
+    public string Password { get; set; }
+}
 
     public class RegisterDto
     {
