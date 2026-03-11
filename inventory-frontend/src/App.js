@@ -11,6 +11,10 @@ import DashboardRouter from './components/DashboardRouter.jsx';
 // Global styles
 import './App.css';
 
+// password changing
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+
 function App() {
   return (
     // AuthProvider must wrap entire app to provide authentication context
@@ -29,6 +33,11 @@ function App() {
             {/* Dashboard route uses DashboardRouter to show role-specific dashboard */}
             {/* DashboardRouter will render StudentDashboard OR StaffAdminDashboard based on user role */}
             <Route path="/dashboard" element={<DashboardRouter />} />
+            
+            {/* Routes for password reset flow */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+
           </Routes>
         </div>
       </BrowserRouter>

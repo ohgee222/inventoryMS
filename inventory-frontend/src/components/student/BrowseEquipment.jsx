@@ -12,6 +12,7 @@ const BrowseEquipment = () => {
   const [requestEndDate, setRequestEndDate] = useState('');
   const [purpose, setPurpose] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
+   const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     fetchAvailableAssets();
@@ -138,16 +139,21 @@ const BrowseEquipment = () => {
             maxHeight: '80vh',
             overflow: 'auto'
           }}>
+         
             <h4>Request: {selectedAsset.name}</h4>
             <form onSubmit={handleSubmitRequest}>
               <div style={{ marginBottom: '15px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>
                   Start Date:
                 </label>
+                
+               
                 <input
+                
                   type="date"
                   value={requestStartDate}
                   onChange={(e) => setRequestStartDate(e.target.value)}
+                  min={today}
                   required
                   style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }}
                 />

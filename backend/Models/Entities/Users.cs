@@ -41,6 +41,8 @@ namespace InventoryMS.Models.Entities
         [Required]
         [MaxLength(255)]
         public string PasswordHash { get; set; }
+        public string? ResetToken { get; set; }
+         public DateTime? ResetTokenExpiry { get; set; }
 
         public bool IsActive { get; set; } = true;
 
@@ -51,6 +53,7 @@ namespace InventoryMS.Models.Entities
         // Computed property for display
         [NotMapped]
         public string FullName => $"{Fname} {Lname}";
+
 
 
 
