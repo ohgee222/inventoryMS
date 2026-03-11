@@ -212,7 +212,7 @@ namespace InventoryMS.Controllers
             user.IsActive = false;
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = $"User {user.FullName} deactivated successfully" });
+            return Ok(new { message = $"User {user.FullName} deleted successfully" });
         }
     }
 

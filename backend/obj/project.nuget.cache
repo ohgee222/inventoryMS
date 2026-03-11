@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ONrtkgr/QEU=",
+  "dgSpecHash": "8LHP7IDj1u4=",
   "success": true,
   "projectFilePath": "/Users/oghoghosaohonba/Desktop/InventoryMS/backend/InventoryMS.csproj",
   "expectedPackageFiles": [
@@ -37,6 +37,7 @@
     "/Users/oghoghosaohonba/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/mimekit/4.15.1/mimekit.4.15.1.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/mysqlconnector/2.1.2/mysqlconnector.2.1.2.nupkg.sha512",
+    "/Users/oghoghosaohonba/.nuget/packages/newtonsoft.json/13.0.4/newtonsoft.json.13.0.4.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/pomelo.entityframeworkcore.mysql/6.0.3/pomelo.entityframeworkcore.mysql.6.0.3.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "/Users/oghoghosaohonba/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",

@@ -8,6 +8,7 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using InventoryMS.Controllers;
+using InventoryMS.Helpers;
 
 namespace InventoryMS.Controllers
 {
@@ -28,6 +29,12 @@ namespace InventoryMS.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
+            // Validate email format
+            if (!EmailValidator.IsValidUniversityEmail(dto.Email))
+            {
+                return Unauthorized(new { message = "Invalid email format" });
+            }
+            
             // Find user by email
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
@@ -72,6 +79,14 @@ namespace InventoryMS.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
+
+
+             // VALIDATE EMAIL FIRST
+            var emailError = EmailValidator.GetEmailError(dto.Email);
+            if (emailError != null)
+            {
+                return BadRequest(new { message = emailError });
+            }
             // Check if email already exists
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
