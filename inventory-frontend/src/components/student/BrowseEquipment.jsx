@@ -6,6 +6,7 @@ const BrowseEquipment = () => {
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestStartDate, setRequestStartDate] = useState('');
@@ -82,6 +83,10 @@ const BrowseEquipment = () => {
   };
 
   if (loading) return <p>Loading equipment...</p>;
+  const filteredAssets = assets.filter(asset =>
+  asset.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
 
   return (
     <div>
@@ -89,6 +94,24 @@ const BrowseEquipment = () => {
       <p style={{ color: '#6b7280', marginBottom: '20px' }}>
         Browse and request equipment for loan
       </p>
+
+      {/* SEARCH BAR */}
+    <div style={{ marginBottom: '25px' }}>
+      <input
+        type="text"
+        placeholder="🔍 Search equipment by name..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          padding: '10px 14px',
+          borderRadius: '6px',
+          border: '1px solid #d1d5db',
+          fontSize: '14px'
+        }}
+      />
+    </div>
 
       {successMessage && (
         <div style={{
@@ -221,7 +244,7 @@ const BrowseEquipment = () => {
       )}
 
       {/* Equipment Grid */}
-      {assets.length === 0 ? (
+     {filteredAssets.length === 0 ? (
         <p style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
           No equipment currently available.
         </p>
@@ -231,7 +254,7 @@ const BrowseEquipment = () => {
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
           gap: '20px'
         }}>
-          {assets.map(asset => (
+          {filteredAssets.map(asset => (
             <div key={asset.id} style={{
               backgroundColor: '#ffffff',
               border: '1px solid #e5e7eb',

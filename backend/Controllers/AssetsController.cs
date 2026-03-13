@@ -149,6 +149,28 @@ namespace InventoryMS.Controllers
             return Ok(asset);
         }
 
+        // GET: api/Assets/search
+// GET: api/Assets/search
+[HttpGet("search")]
+public async Task<ActionResult<IEnumerable<Asset>>> SearchAssets(string? name)
+{
+    var query = _context.Assets
+        .Include(a => a.Category)
+        .Where(a => a.Status == AssetStatus.Available) // only available assets
+        .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(name))
+    {
+        query = query.Where(a =>
+    a.Name.ToLower().Contains(name.ToLower()) ||
+    a.SerialNumber.ToLower().Contains(name.ToLower()));
+    }
+
+    var results = await query.ToListAsync();
+
+    return Ok(results);
+}
+
         // DELETE: api/Assets/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsset(int id)

@@ -7,6 +7,7 @@ const AssetManagement = () => {
   const { user } = useAuth();
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [showCategoryManagement, setShowCategoryManagement] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingAsset, setEditingAsset] = useState(null);
@@ -121,6 +122,10 @@ const AssetManagement = () => {
   };
 
   if (loading) return <p>Loading assets...</p>;
+  //filter
+  const filteredAssets = assets.filter(asset =>
+  asset.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <div style={{ textAlign: 'center' }}>
@@ -175,6 +180,29 @@ const AssetManagement = () => {
         )}
       </div>
 
+
+
+
+
+
+       {/* SEARCH BAR */}
+    <div style={{ marginBottom: '25px' }}>
+      <input
+        type="text"
+        placeholder="🔍 Search equipment by name..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          padding: '10px 14px',
+          borderRadius: '6px',
+          border: '1px solid #d1d5db',
+          fontSize: '14px'
+        }}
+      />
+    </div>
+
       {/* Category Management Section */}
       {showCategoryManagement && isAdmin && (
         <div style={{
@@ -222,14 +250,14 @@ const AssetManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {assets.length === 0 ? (
+         {filteredAssets.length === 0 ? (
             <tr>
               <td colSpan="6" style={{ padding: '20px', textAlign: 'center' }}>
                 No assets found. Add one to get started.
               </td>
             </tr>
           ) : (
-            assets.map(asset => (
+           filteredAssets.map(asset => (
               <tr key={asset.id}>
                 <td style={tableCellStyle}>{asset.name}</td>
                 <td style={tableCellStyle}>{asset.serialNumber}</td>
