@@ -13,10 +13,32 @@ const Dashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pendingRequests, setPendingRequests] = useState(0);
+  const [recentActivity, setRecentActivity] = useState([0]);
+
+useEffect(() => {
+  fetchPendingRequests();
+  fetchRecentActivity();
+}, []);
 
   useEffect(() => {
     fetchDashboardStats();
   }, [user.token]);
+  useEffect(() => {
+
+}, []);
+
+const fetchPendingRequests = async () => {
+  const response = await fetch(
+    "http://localhost:7028/api/LoanRequests/pending/count",
+    {
+      headers: { Authorization: `Bearer ${user.token}` }
+    }
+  );
+
+  const data = await response.json();
+  setPendingRequests(data.pendingRequests);
+};
 
   const fetchDashboardStats = async () => {
     setLoading(true);
@@ -49,15 +71,16 @@ const Dashboard = () => {
       const overdueLoans = loans.filter(l => 
         l.returnDate === null && new Date(l.dueDate) < new Date()
       ).length;
-
       setStats({
-        totalAssets,
-        availableAssets,
-        onLoanAssets,
-        maintenanceAssets,
-        overdueLoans,
-        activeLoans
-      });
+  totalAssets,
+  availableAssets,
+  onLoanAssets,
+  maintenanceAssets,
+  overdueLoans,
+  activeLoans
+});
+
+      
 
     } catch (error) {
       console.error('Dashboard fetch error:', error);
@@ -66,6 +89,19 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+  
+
+  const fetchRecentActivity = async () => {
+  const response = await fetch(
+    "http://localhost:7028/api/Loans/recent",
+    {
+      headers: { Authorization: `Bearer ${user.token}` }
+    }
+  );
+
+  const data = await response.json();
+  setRecentActivity(data);
+};
 
   // Calculate percentages for pie chart
   const availablePercent = stats.totalAssets > 0 
@@ -96,6 +132,8 @@ const Dashboard = () => {
           {error}
         </div>
       )}
+
+     
 
       {/* Stats Cards Row */}
       <div style={{
@@ -135,7 +173,26 @@ const Dashboard = () => {
               </svg>
             </div>
           </div>
+          
         </div>
+  {/* Pending Requests Card */}
+<div style={statCardStyle}>
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+    <div>
+      <div style={statLabelStyle}>Pending Requests</div>
+      <div style={statNumberStyle}>{pendingRequests}</div>
+      <div style={statSubtextStyle}>Awaiting approval</div>
+    </div>
+
+    <div style={{ ...iconBoxStyle, backgroundColor: '#fff3e0' }}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fb8c00" strokeWidth="2">
+        <path d="M12 8v4l3 3"></path>
+        <circle cx="12" cy="12" r="10"></circle>
+      </svg>
+    </div>
+  </div>
+</div>
+
 
         {/* On Loan Card */}
         <div style={statCardStyle}>
@@ -181,7 +238,7 @@ const Dashboard = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
         {/* Equipment Status Distribution - Pie Chart */}
         <div style={chartCardStyle}>
-          <h3 style={chartTitleStyle}>Equipment Status Distribution</h3>
+          <h3 style={chartTitleStyle}>Equipment Status Charts</h3>
           
           {/* Simple CSS Pie Chart */}
           <div style={{ 
@@ -270,9 +327,48 @@ const Dashboard = () => {
               <span style={legendValueStyle}>{stats.maintenanceAssets}</span>
             </div>
           </div>
+          
         </div>
+{/* Recent Activity */}
+<div style={chartCardStyle}>
+  <h3 style={chartTitleStyle}>Recent Activity</h3>
+
+  {recentActivity.length === 0 ? (
+    <p style={{ color: "#6b7280" }}>No recent activity</p>
+  ) : (
+    <div>
+      {recentActivity.map((activity, index) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "10px 0",
+            borderBottom: "1px solid #f3f4f6",
+            fontSize: "14px",
+            color: "#374151"
+          }}
+        >
+          <div
+            style={{
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              backgroundColor: "#ff9800"
+            }}
+          ></div>
+
+          {activity.message}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
       </div>
     </div>
+    
   );
 };
 

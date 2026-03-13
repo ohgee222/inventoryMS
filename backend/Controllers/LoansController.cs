@@ -249,6 +249,24 @@ namespace InventoryMS.Controllers
 
             return Ok(loans);
         }
+   [HttpGet("recent")]
+public async Task<IActionResult> GetRecentActivity()
+{
+    var recent = await _context.Loans
+        .Include(l => l.Asset)
+        .Include(l => l.User)
+        .OrderByDescending(l => l.CheckOutDate)
+        .Take(5)
+        .Select(l => new
+        {
+            message = $"{l.User.Fname} {l.User.Lname} borrowed {l.Asset.Name}",
+            time = l.CheckOutDate
+        })
+        .ToListAsync();
+
+    return Ok(recent);
+}
+
     }
 
     // Simple DTOs

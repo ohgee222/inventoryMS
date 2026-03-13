@@ -289,7 +289,9 @@ namespace InventoryMS.Controllers
 
         // PUT: api/LoanRequests/5/reject
         [HttpPut("{id}/reject")]
+     
         public async Task<IActionResult> RejectLoanRequest(int id, RejectLoanRequestDto dto)
+
         {
             // Check request exists
             var connection = _context.Database.GetDbConnection();
@@ -341,7 +343,17 @@ namespace InventoryMS.Controllers
                 reason = dto.RejectionReason
             });
         }
-    }
+        [HttpGet("pending/count")]
+        public async Task<IActionResult> GetPendingRequestsCount()
+        {
+            var count = await _context.LoanRequests
+                .Where(r => r.Status == 0) // 0 = Pending
+                .CountAsync();
+
+            return Ok(new { pendingRequests = count });
+        }
+                
+  }
 
     // DTOs
     public class LoanRequestResponseDto
