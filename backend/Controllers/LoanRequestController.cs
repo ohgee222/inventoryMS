@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
+using InventoryMS.Services;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace InventoryMS.Controllers
 {
@@ -11,10 +14,12 @@ namespace InventoryMS.Controllers
     public class LoanRequestsController : ControllerBase
     {
         private readonly InventoryDb _context;
+        private readonly ActivityLogger _activityLogger;
 
-        public LoanRequestsController(InventoryDb context)
+            public LoanRequestsController(InventoryDb context, ActivityLogger activityLogger)
         {
             _context = context;
+            _activityLogger = activityLogger;
         }
 
         // GET: api/LoanRequests
@@ -278,6 +283,16 @@ namespace InventoryMS.Controllers
             asset.Status = AssetStatus.CheckedOut;
             asset.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+            // LOG THE ACTIVITY
+            var user = await _context.Users.FindAsync(userId);
+            await _activityLogger.LogAsync(
+                activityType: "LoanApproved",
+                description: $"Loan request approved for {asset.Name}",
+                userId: dto.StaffId,
+                userName: $"{staff.Fname} {staff.Lname}",
+                relatedEntityType: "LoanRequest",
+                relatedEntityId: id
+            );
 
             return Ok(new
             {
@@ -285,6 +300,10 @@ namespace InventoryMS.Controllers
                 loanCreated = true,
                 reviewedAt = reviewedAt
             });
+            
+
+            
+
         }
 
         // PUT: api/LoanRequests/5/reject
@@ -335,6 +354,23 @@ namespace InventoryMS.Controllers
                       RejectionReason = {2}
                   WHERE Id = {3}",
                 dto.StaffId, reviewedAt, dto.RejectionReason, id);
+            
+            // LOG THE ACTIVITY
+            // Get asset name for the log
+            var loanRequest = await _context.LoanRequests.Include(lr => lr.Asset).Include(lr => lr.User).FirstOrDefaultAsync(lr => lr.Id == id);
+                if (loanRequest != null)
+                {
+                    await _activityLogger.LogAsync(
+                        activityType: "LoanRejected",
+                        description: $"Loan request rejected for {loanRequest.Asset?.Name}: {dto.RejectionReason}",
+                        userId: dto.StaffId,
+                        userName: $"{staff.Fname} {staff.Lname}",
+                        relatedEntityType: "LoanRequest",
+                        relatedEntityId: id
+                    );
+                }
+
+
 
             return Ok(new
             {

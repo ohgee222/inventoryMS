@@ -4,7 +4,8 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using System.Diagnostics;
-using InventoryMS.Controllers;
+
+using InventoryMS.Services;
 
 namespace InventoryMS.Controllers
 {
@@ -13,11 +14,13 @@ namespace InventoryMS.Controllers
     public class AssetsController : ControllerBase
     {
         private readonly InventoryDb _context;
+        private readonly ActivityLogger _activityLogger;
 
-        public AssetsController(InventoryDb context)
-        {
-            _context = context;
-        }
+      public AssetsController(InventoryDb context, ActivityLogger activityLogger)
+    {
+        _context = context;
+        _activityLogger = activityLogger;
+    }
 
         // GET: api/Assets
         [HttpGet]
@@ -91,6 +94,14 @@ namespace InventoryMS.Controllers
             _context.Assets.Add(asset);
             await _context.SaveChangesAsync();
 
+            //logging
+            await _activityLogger.LogAsync(
+            activityType: "AssetCreated",
+            description: $"New asset added: {asset.Name}",
+            relatedEntityType: "Asset",
+            relatedEntityId: asset.Id
+        );
+
             return CreatedAtAction(nameof(GetAsset), new { id = asset.Id }, asset);
         }
 
@@ -99,6 +110,13 @@ namespace InventoryMS.Controllers
         public async Task<IActionResult> UpdateAsset(int id, UpdateAssetDto dto)
         {
             var asset = await _context.Assets.FindAsync(id);
+
+            var oldName = asset.Name;
+            var oldCategoryId = asset.CategoryId;
+            var oldDescription = asset.Description;
+            var oldSerialNumber = asset.SerialNumber;
+            var oldStatus = asset.Status;
+            var oldCondition = asset.PhysicalCondition;
 
             if (asset == null)
             {
@@ -145,11 +163,42 @@ namespace InventoryMS.Controllers
             {
                 return StatusCode(500, new { message = "Error updating asset" });
             }
+            var changes = new List<string>();
+
+            if (oldName != asset.Name)
+                changes.Add($"Name changed from '{oldName}' to '{asset.Name}'");
+
+            if (oldCategoryId != asset.CategoryId)
+                changes.Add($"Category changed");
+
+            if (oldDescription != asset.Description)
+                changes.Add("Description updated");
+
+            if (oldSerialNumber != asset.SerialNumber)
+                changes.Add($"Serial number changed from '{oldSerialNumber}' to '{asset.SerialNumber}'");
+
+            if (oldStatus != asset.Status)
+                changes.Add($"Status changed from {oldStatus} to {asset.Status}");
+
+            if (oldCondition != asset.PhysicalCondition)
+                changes.Add($"Condition changed from {oldCondition} to {asset.PhysicalCondition}");
+
+            var description = changes.Count > 0
+            ? $"Asset updated: {asset.Name} ({string.Join(", ", changes)})"
+            : $"Asset updated: {asset.Name}";
+
+            await _activityLogger.LogAsync(
+                activityType: "AssetUpdated",
+                description: description,
+                relatedEntityType: "Asset",
+                relatedEntityId: asset.Id
+            );
+
 
             return Ok(asset);
         }
 
-        // GET: api/Assets/search
+        
 // GET: api/Assets/search
 [HttpGet("search")]
 public async Task<ActionResult<IEnumerable<Asset>>> SearchAssets(string? name)
@@ -184,6 +233,14 @@ public async Task<ActionResult<IEnumerable<Asset>>> SearchAssets(string? name)
 
             _context.Assets.Remove(asset);
             await _context.SaveChangesAsync();
+
+            //LOGGING
+            await _activityLogger.LogAsync(
+            activityType: "AssetDeleted",
+            description: $"Asset deleted: {asset.Name}",
+            relatedEntityType: "Asset",
+            relatedEntityId: asset.Id
+        );
 
             return Ok(new { message = $"Asset {asset.Name} deleted successfully" });
         }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../auth/AuthContext';
+import RecentActivity from './RecentActivity';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -333,37 +334,12 @@ const fetchPendingRequests = async () => {
 <div style={chartCardStyle}>
   <h3 style={chartTitleStyle}>Recent Activity</h3>
 
-  {recentActivity.length === 0 ? (
-    <p style={{ color: "#6b7280" }}>No recent activity</p>
-  ) : (
-    <div>
-      {recentActivity.map((activity, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "10px 0",
-            borderBottom: "1px solid #f3f4f6",
-            fontSize: "14px",
-            color: "#374151"
-          }}
-        >
-          <div
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              backgroundColor: "#ff9800"
-            }}
-          ></div>
 
-          {activity.message}
-        </div>
-      ))}
-    </div>
-  )}
+
+
+
+  <RecentActivity limit={5} />
+
 </div>
 
       </div>

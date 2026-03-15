@@ -6,7 +6,7 @@ import LoanRequests from '../components/LoanRequests';
 import ActiveLoans from '../components/ActiveLoans';
 import Dashboard from '../components/Dashboard';
 import UserManagement from '../components/UserManagement';
-
+import RecentActivity from '../components/RecentActivity';
 
 const StaffAdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -98,7 +98,7 @@ const StaffAdminDashboard = () => {
                   {loading ? 'Loading...' : displayName}
                 </p>
                 <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>
-                  {isAdmin ? 'Administrator' : 'Staff Member'}
+                  {isAdmin ? 'Admin' : 'Staff '}
                 </p>
               </div>
               <button onClick={handleLogout} style={{
@@ -230,21 +230,38 @@ const StaffAdminDashboard = () => {
               </svg>
               Users
             </button>
+
+            
             
 
           )}
+              <button
+                onClick={() => setActiveSection('activity')}
+                style={{
+                  ...tabButtonStyle,
+                  backgroundColor: activeSection === 'activity' ? '#ffffff' : 'transparent',
+                  boxShadow: activeSection === 'activity' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  fontWeight: activeSection === 'activity' ? '600' : '500'
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                Activity
+             </button>
         </div>
         
             {isAdmin && activeSection === 'users' && (
-  <section>
-    <UserManagement />
-  </section>
+            <section>
+              <UserManagement />
+            </section>
 )}
         {/* Content Sections */}
         {activeSection === 'dashboard' && <Dashboard />}
         {activeSection === 'assets' && <AssetManagement />}
         {activeSection === 'loanRequests' && <LoanRequests />}
         {activeSection === 'activeLoans' && <ActiveLoans />}
+        {activeSection === 'activity' && <RecentActivity />}
        
       </main>
     </div>

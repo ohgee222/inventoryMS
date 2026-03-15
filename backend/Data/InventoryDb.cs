@@ -20,6 +20,8 @@ namespace InventoryMS.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<AssetHistory> AssetHistories { get; set; }
 
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

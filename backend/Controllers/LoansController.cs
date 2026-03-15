@@ -3,18 +3,27 @@ using Microsoft.EntityFrameworkCore;
 using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
-
+using InventoryMS.Services;
 namespace InventoryMS.Controllers
 {
+    //need to finish some stuffs on audit log
+
+
+
+
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class LoansController : ControllerBase
     {
         private readonly InventoryDb _context;
+        private readonly ActivityLogger _activityLogger;
 
-        public LoansController(InventoryDb context)
+        public LoansController(InventoryDb context, ActivityLogger activityLogger)
         {
             _context = context;
+            _activityLogger=activityLogger;
         }
 
         // GET: api/Loans (Raw SQL to avoid NULL issues)
@@ -110,6 +119,15 @@ namespace InventoryMS.Controllers
             asset.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
+            await _activityLogger.LogAsync(
+            activityType: "LoanCreated",
+            description: $"Loan created for {asset.Name} borrowed by {user.Fname} {user.Lname}",
+            userId: dto.ApprovedByStaffId,
+            userName: dto.ApprovedByStaffId.HasValue ? "Staff" : "System",
+            relatedEntityType: "Loan",
+            relatedEntityId: dto.AssetId
+        );
+
             return Ok(new
             {
                 message = "Loan created successfully",
@@ -197,6 +215,22 @@ namespace InventoryMS.Controllers
                       UpdatedAt = {1}
                   WHERE Id = {2}",
                 physicalCondition, DateTime.UtcNow, assetId);
+
+                
+                var user = await _context.Users.FindAsync(dto.ReceivedByStaffId);
+                var asset = await _context.Assets.FindAsync(assetId);
+                // logging
+            
+
+                await _activityLogger.LogAsync(
+                    activityType: "LoanReturned",
+                    description: $"Equipment returned for  {asset.Name}. Overdue days: {overdueDays}",
+                    userId: dto.ReceivedByStaffId,
+                    userName: user != null ? $"{user.Fname} {user.Lname}" : "System",
+                    relatedEntityType: "Loan",
+                    relatedEntityId: id
+                );
+
 
             return Ok(new
             {
