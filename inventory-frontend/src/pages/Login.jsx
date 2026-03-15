@@ -26,7 +26,7 @@ const LoginGlass = () => {
 
       if (response.ok) {
         login(data.token);
-        navigate(data.role === 'Student' ? '/student-dashboard' : '/dashboard');
+        navigate('/dashboard');
       } else {
         setError(data.message || 'Login failed');
       }

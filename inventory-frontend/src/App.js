@@ -34,6 +34,7 @@ function App() {
             {/* DashboardRouter will render StudentDashboard OR StaffAdminDashboard based on user role */}
             <Route path="/dashboard" element={<DashboardRouter />} />
             
+            
             {/* Routes for password reset flow */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
