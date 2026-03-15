@@ -4,6 +4,7 @@ import RecentActivity from './RecentActivity';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const isAdmin = user?.role === 'Admin';
   const [stats, setStats] = useState({
     totalAssets: 0,
     availableAssets: 0,
@@ -15,11 +16,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pendingRequests, setPendingRequests] = useState(0);
-  const [recentActivity, setRecentActivity] = useState([0]);
 
 useEffect(() => {
   fetchPendingRequests();
-  fetchRecentActivity();
+
 }, []);
 
   useEffect(() => {
@@ -64,10 +64,16 @@ const fetchPendingRequests = async () => {
 
       // Calculate stats
       const totalAssets = assets.length;
-      const availableAssets = assets.filter(a => a.status === 0).length; // Available
-      const onLoanAssets = assets.filter(a => a.status === 1).length; // CheckedOut
-      const maintenanceAssets = assets.filter(a => a.physicalCondition === 3).length; // InRepair
 
+      const maintenanceAssets = assets.filter(a => a.physicalCondition === 3).length;
+
+      const availableAssets = assets.filter(
+        a => a.status === 0 && a.physicalCondition !== 3
+      ).length;
+
+      const onLoanAssets = assets.filter(
+        a => a.status === 1 && a.physicalCondition !== 3
+      ).length;
       const activeLoans = loans.filter(l => l.returnDate === null).length;
       const overdueLoans = loans.filter(l => 
         l.returnDate === null && new Date(l.dueDate) < new Date()
@@ -92,17 +98,6 @@ const fetchPendingRequests = async () => {
   };
   
 
-  const fetchRecentActivity = async () => {
-  const response = await fetch(
-    "http://localhost:7028/api/Loans/recent",
-    {
-      headers: { Authorization: `Bearer ${user.token}` }
-    }
-  );
-
-  const data = await response.json();
-  setRecentActivity(data);
-};
 
   // Calculate percentages for pie chart
   const availablePercent = stats.totalAssets > 0 
@@ -277,7 +272,7 @@ const fetchPendingRequests = async () => {
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                fontSize: '24px',
+                fontSize: '18px',
                 fontWeight: '600',
                 color: '#4caf50'
               }}>
@@ -330,17 +325,14 @@ const fetchPendingRequests = async () => {
           </div>
           
         </div>
-{/* Recent Activity */}
-<div style={chartCardStyle}>
-  <h3 style={chartTitleStyle}>Recent Activity</h3>
+{/* Recent Activity (Admin only) */}
+{isAdmin && (
+  <div style={chartCardStyle}>
+    <h3 style={chartTitleStyle}>Recent Activity</h3>
 
-
-
-
-
-  <RecentActivity limit={5} />
-
-</div>
+    <RecentActivity limit={5} showTitle={false} />
+  </div>
+)}
 
       </div>
     </div>

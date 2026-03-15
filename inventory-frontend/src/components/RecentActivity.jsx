@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../auth/AuthContext';
 
-const RecentActivity = ({ limit = 20 }) => {
+const RecentActivity = ({ limit = 100 }) => {
   const { user } = useAuth();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
