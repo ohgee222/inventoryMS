@@ -5,12 +5,13 @@ using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using InventoryMS.Services;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Staff,Student")] // Require authentication for all endpoints in this controller
     public class LoanRequestsController : ControllerBase
     {
         private readonly InventoryDb _context;
@@ -24,6 +25,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/LoanRequests
         [HttpGet]
+        [Authorize(Roles = "Admin")] // Only allow Admin to view all loan requests
         public async Task<IActionResult> GetLoanRequests([FromQuery] string status = null)
         {
             var connection = _context.Database.GetDbConnection();
@@ -96,6 +98,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/LoanRequests/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")] // Only allow Admin to view loan request details
         public async Task<IActionResult> GetLoanRequest(int id)
         {
             var connection = _context.Database.GetDbConnection();
@@ -147,6 +150,7 @@ namespace InventoryMS.Controllers
 
         // POST: api/LoanRequests (Create new request)
         [HttpPost]
+        [Authorize(Roles = "Admin,Staff,Student")] // Allow Admin, Staff, and Student to create loan requests
         public async Task<IActionResult> CreateLoanRequest(CreateLoanRequestDto dto)
         {
 
@@ -212,6 +216,7 @@ namespace InventoryMS.Controllers
 
         // PUT: api/LoanRequests/5/approve
         [HttpPut("{id}/approve")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ApproveLoanRequest(int id, ApproveLoanRequestDto dto)
         {
             // Check request exists
@@ -308,6 +313,7 @@ namespace InventoryMS.Controllers
 
         // PUT: api/LoanRequests/5/reject
         [HttpPut("{id}/reject")]
+        [Authorize(Roles = "Admin")] // Only allow Admin to reject loan requests
      
         public async Task<IActionResult> RejectLoanRequest(int id, RejectLoanRequestDto dto)
 

@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
-
+using Microsoft.AspNetCore.Authorization;
 namespace InventoryMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Staff")] // Require authentication for all endpoints in this controller
     public class AssetHistoryController : ControllerBase
     {
         private readonly InventoryDb _context;
@@ -18,6 +19,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/AssetHistory
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to view asset history
         [HttpGet]
         public async Task<IActionResult> GetAssetHistory([FromQuery] int? assetId = null, [FromQuery] string changeType = null)
         {
@@ -83,6 +85,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/AssetHistory/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to view asset history details  
         public async Task<IActionResult> GetAssetHistoryEntry(int id)
         {
             var connection = _context.Database.GetDbConnection();
@@ -133,6 +136,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/AssetHistory/asset/5 (Get history for specific asset)
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to view asset history for specific asset
         [HttpGet("asset/{assetId}")]
         public async Task<IActionResult> GetHistoryByAsset(int assetId)
         {
@@ -191,6 +195,7 @@ namespace InventoryMS.Controllers
 
         // POST: api/AssetHistory (Log a change)
         [HttpPost]
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to log asset changes
         public async Task<IActionResult> LogChange(CreateAssetHistoryDto dto)
         {
             // Validate asset exists
@@ -231,6 +236,7 @@ namespace InventoryMS.Controllers
 
         // POST: api/AssetHistory/log-status-change (Helper method for status changes)
         [HttpPost("log-status-change")]
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to log asset status changes
         public async Task<IActionResult> LogStatusChange(LogStatusChangeDto dto)
         {
             // Validate asset exists
@@ -269,6 +275,7 @@ namespace InventoryMS.Controllers
 
         // DELETE: api/AssetHistory/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // Only allow Admin to delete asset history entries
         public async Task<IActionResult> DeleteHistoryEntry(int id)
         {
             // Check entry exists

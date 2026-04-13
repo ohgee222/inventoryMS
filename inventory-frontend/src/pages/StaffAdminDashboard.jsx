@@ -173,7 +173,7 @@ const StaffAdminDashboard = () => {
             </svg>
             Equipment
           </button>
-
+              {isAdmin && (
           <button
             onClick={() => setActiveSection('loanRequests')}
             style={{
@@ -191,7 +191,7 @@ const StaffAdminDashboard = () => {
               <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
             Loan Requests
-          </button>
+          </button>)}
 
           <button
             onClick={() => setActiveSection('activeLoans')}
@@ -264,10 +264,13 @@ const StaffAdminDashboard = () => {
             <section>
               <RecentActivity />
             </section>)}
+            {isAdmin && activeSection === 'loanRequests' && (
+              <section>
+                <LoanRequests />
+              </section>)}
         {/* Content Sections */}
         {activeSection === 'dashboard' && <Dashboard />}
-        {activeSection === 'assets' && <AssetManagement />}
-        {activeSection === 'loanRequests' && <LoanRequests />}
+        {activeSection === 'assets' && <AssetManagement />} 
         {activeSection === 'activeLoans' && <ActiveLoans />}
       
        

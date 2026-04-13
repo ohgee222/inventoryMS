@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using InventoryMS.Data;
 using InventoryMS.Models.Entities;
-
+using Microsoft.AspNetCore.Authorization;
 namespace InventoryMS.Controllers
 {
     [Route("api/[controller]")] // created the api controller
     [ApiController]
+    [Authorize(Roles = "Admin,Staff,Student")] // Require authentication for all endpoints in this controller
     public class CategoriesController : ControllerBase
     {
         // creating controller for the categories to test the api
@@ -19,6 +20,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/Categories
         // retuens al;l categories as JSON
+        [Authorize(Roles = "Admin,Staff,Student")] // Allow Admin, Staff, and Student to view categories
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
@@ -29,6 +31,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/Categories/5
         // to return siingh,e category by ID
+        [Authorize(Roles = "Admin,Staff,Student")] // Allow Admin, Staff, and Student to view category details
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
@@ -43,6 +46,7 @@ namespace InventoryMS.Controllers
         }
 
         // POST: api/Categories
+        [Authorize(Roles = "Admin")] // Only allow Admin and Staff to create categories
         [HttpPost]
         public async Task<ActionResult<Category>> CreateCategory(CreateCategoryDto dto)
         {
@@ -65,6 +69,7 @@ namespace InventoryMS.Controllers
         // PUT: api/Categories/5
         //update existing category
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")] // Only allow Admin to update categories
         public async Task<IActionResult> UpdateCategory(int id, UpdateCategoryDto dto)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -93,6 +98,7 @@ namespace InventoryMS.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // Only allow Admin to delete categories
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);

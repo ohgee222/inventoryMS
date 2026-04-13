@@ -4,6 +4,7 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using InventoryMS.Services;
+using Microsoft.AspNetCore.Authorization;
 namespace InventoryMS.Controllers
 {
     //need to finish some stuffs on audit log
@@ -15,6 +16,7 @@ namespace InventoryMS.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Require authentication for all endpoints in this controller
     public class LoansController : ControllerBase
     {
         private readonly InventoryDb _context;
@@ -27,6 +29,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/Loans (Raw SQL to avoid NULL issues)
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to access loan data
         [HttpGet]
         public async Task<IActionResult> GetLoans()
         {
@@ -79,6 +82,7 @@ namespace InventoryMS.Controllers
         }
 
         // POST: api/Loans (Create loan)
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to create loans
         [HttpPost]
         public async Task<IActionResult> CreateLoan(CreateLoanDto dto)
         {
@@ -140,6 +144,7 @@ namespace InventoryMS.Controllers
         }
 
         // PUT: api/Loans/{id}/return
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to process returns
         [HttpPut("{id}/return")]
         public async Task<IActionResult> ReturnLoan(int id, ReturnLoanDto dto)
         {
@@ -241,6 +246,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/Loans/overdue
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to view overdue loans
         [HttpGet("overdue")]
         public async Task<IActionResult> GetOverdueLoans()
         {
@@ -283,6 +289,8 @@ namespace InventoryMS.Controllers
 
             return Ok(loans);
         }
+  
+  [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to view recent activity
    [HttpGet("recent")]
 public async Task<IActionResult> GetRecentActivity()
 {

@@ -4,11 +4,12 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using BCrypt.Net;
-
+using Microsoft.AspNetCore.Authorization;
 namespace InventoryMS.Controllers
 {
     [Route("api/[controller]")] // create the controller api
     [ApiController]
+    [Authorize] // Require authentication for all endpoints in this controller
     public class UsersController : ControllerBase
     {
         private readonly InventoryDb _context;

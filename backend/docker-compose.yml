@@ -1,38 +1,45 @@
-﻿version: '3.8'
-
-services:
-  mysql:
+﻿services:
+  db:
     image: mysql:8.0
     container_name: inventoryms_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: YourRootPassword123!
-      MYSQL_DATABASE: InventoryDB
-      MYSQL_USER: inventoryuser
-      MYSQL_PASSWORD: InventoryPass123!
-    ports:
-      - "3306:3306"
+      MYSQL_ROOT_PASSWORD: ohonbiz@10
+      MYSQL_DATABASE: InventoryMs
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - inventory_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
+      interval: 10s
+      timeout: 5s
       retries: 10
 
-  web:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: inventoryms_web
+    container_name: inventoryms_backend
     ports:
       - "5001:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=mysql;Database=InventoryDB;User=inventoryuser;Password=InventoryPass123!;
+      - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=InventoryMs;User=root;Password=ohonbiz@10;
     depends_on:
-      mysql:
+      db:
         condition: service_healthy
+    networks:
+      - inventory_network
+
+  frontend:
+    build:
+      context: ../inventory-frontend
+      dockerfile: Dockerfile
+    container_name: inventoryms_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
     networks:
       - inventory_network
 

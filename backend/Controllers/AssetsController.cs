@@ -4,6 +4,8 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+
 
 using InventoryMS.Services;
 
@@ -11,6 +13,7 @@ namespace InventoryMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Require authentication for all endpoints in this controller
     public class AssetsController : ControllerBase
     {
         private readonly InventoryDb _context;
@@ -50,6 +53,7 @@ namespace InventoryMS.Controllers
         }
 
         // POST: api/Assets
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to create assets
         [HttpPost]
         public async Task<ActionResult<Asset>> CreateAsset([FromBody] CreateAssetDto dto)
         {
@@ -106,6 +110,7 @@ namespace InventoryMS.Controllers
         }
 
         // PUT: api/Assets/5
+        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to update assets
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsset(int id, UpdateAssetDto dto)
         {
@@ -200,6 +205,7 @@ namespace InventoryMS.Controllers
 
         
 // GET: api/Assets/search
+[Authorize(Roles = "Admin,Staff,Student")] 
 [HttpGet("search")]
 public async Task<ActionResult<IEnumerable<Asset>>> SearchAssets(string? name)
 {
@@ -221,6 +227,7 @@ public async Task<ActionResult<IEnumerable<Asset>>> SearchAssets(string? name)
 }
 
         // DELETE: api/Assets/5
+        [Authorize(Roles = "Admin")] // Only allow Admin to delete assets
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsset(int id)
         {

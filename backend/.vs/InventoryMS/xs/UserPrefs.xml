@@ -1,8 +1,4 @@
 ﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
-  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -35,10 +31,8 @@
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="InventoryMS">
-            <Node name="InventoryMS">
-              <Node name="Controllers" expanded="True">
-                <Node name="UsersController.cs" selected="True" />
-              </Node>
+            <Node name="InventoryMS" expanded="True">
+              <Node name="Controllers" expanded="True" />
               <Node name="Helpers" expanded="True" />
               <Node name="Models" expanded="True">
                 <Node name="Enums" expanded="True" />
@@ -49,4 +43,8 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
 </Properties>

@@ -3,12 +3,13 @@ using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")] // Require authentication for all endpoints in this controller
     public class ActivityLogsController : ControllerBase
     {
         private readonly InventoryDb _context;
@@ -19,6 +20,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/ActivityLogs?limit=20
+        [Authorize(Roles = "Admin")] // Only allow Admin to view activity logs
         [HttpGet]
         [HttpGet]
 public async Task<IActionResult> GetRecentActivity([FromQuery] int limit = 20)
