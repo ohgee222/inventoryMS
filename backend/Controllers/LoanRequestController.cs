@@ -25,7 +25,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/LoanRequests
         [HttpGet]
-        [Authorize(Roles = "Admin")] // Only allow Admin to view all loan requests
+        [Authorize(Roles = "Admin,Student")] // Only allow Admin and Student to view loan requests
         public async Task<IActionResult> GetLoanRequests([FromQuery] string status = null)
         {
             var connection = _context.Database.GetDbConnection();
@@ -98,7 +98,7 @@ namespace InventoryMS.Controllers
 
         // GET: api/LoanRequests/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")] // Only allow Admin to view loan request details
+        [Authorize(Roles = "Admin,Student")] // Only allow Admin and Student to view loan request details
         public async Task<IActionResult> GetLoanRequest(int id)
         {
             var connection = _context.Database.GetDbConnection();

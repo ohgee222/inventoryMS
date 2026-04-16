@@ -21,7 +21,7 @@
       dockerfile: Dockerfile
     container_name: inventoryms_backend
     ports:
-      - "5001:80"
+      - "7028:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=InventoryMs;User=root;Password=ohonbiz@10;

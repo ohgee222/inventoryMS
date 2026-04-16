@@ -1,7 +1,6 @@
 ﻿<Properties StartupConfiguration="{9C5A10C9-5EEC-4AFA-9D1F-DF40F4E782D3}|Default">
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/UsersController.cs">
     <Files>
       <File FileName="Models/Enums/LoanRequestStatus.cs" />
@@ -23,7 +22,7 @@
       <File FileName="Properties/launchSettings.json" />
       <File FileName="Services/OverdueCheckService.cs" />
       <File FileName="Program.cs" />
-      <File FileName="Controllers/UsersController.cs" Line="14" Column="47" />
+      <File FileName="Controllers/UsersController.cs" Line="14" Column="6" />
       <File FileName="Helpers/EmailValidator.cs" />
       <File FileName="Controllers/CategoryController.cs" />
     </Files>
@@ -31,8 +30,10 @@
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="InventoryMS">
-            <Node name="InventoryMS" expanded="True">
-              <Node name="Controllers" expanded="True" />
+            <Node name="InventoryMS">
+              <Node name="Controllers" expanded="True">
+                <Node name="UsersController.cs" selected="True" />
+              </Node>
               <Node name="Helpers" expanded="True" />
               <Node name="Models" expanded="True">
                 <Node name="Enums" expanded="True" />
@@ -43,8 +44,9 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.InventoryMS PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
 </Properties>

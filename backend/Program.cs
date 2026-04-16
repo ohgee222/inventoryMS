@@ -52,8 +52,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddDbContext<InventoryDb>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
     options.UseMySql(connectionString,
-        new MySqlServerVersion(new Version(8, 0, 0)));
+        new MySqlServerVersion(new Version(8, 0, 0)),
+        mySqlOptions =>
+        {
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 10,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null
+            );
+        });
 });
 
 // Services
@@ -110,10 +119,28 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Auto-migrate DB
-using (var scope = app.Services.CreateScope())
+// Auto-migrate DB (only in Docker/Production, not locally)
+if (!app.Environment.IsDevelopment())
 {
-    var db = scope.ServiceProvider.GetRequiredService<InventoryDb>();
-    db.Database.Migrate();
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<InventoryDb>();
+
+        int retries = 10;
+        while (retries > 0)
+        {
+            try
+            {
+                db.Database.Migrate();
+                break;
+            }
+            catch
+            {
+                retries--;
+                Thread.Sleep(5000);
+            }
+        }
+    }
 }
 
 app.Run();

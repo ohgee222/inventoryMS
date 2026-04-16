@@ -29,7 +29,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/Loans (Raw SQL to avoid NULL issues)
-        [Authorize(Roles = "Admin,Staff")] // Only allow Admin and Staff to access loan data
+        [Authorize(Roles = "Admin,Staff,Student")] // Only allow Admin and Staff to access loan data
         [HttpGet]
         public async Task<IActionResult> GetLoans()
         {

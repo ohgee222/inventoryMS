@@ -67,6 +67,10 @@ Controllers/
  UsersController.cs
 Data/InventoryDb.cs
 Helpers/EmailValidator.cs
+Migrations/
+ 20260416132413_InitialCreate.cs
+ 20260416132413_InitialCreate.Designer.cs
+ InventoryDbModelSnapshot.cs
 Models/Entities/
  ActivityLog.cs
  Asset.cs

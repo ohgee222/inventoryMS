@@ -38,6 +38,7 @@ const ResetPassword = () => {
           newPassword: newPassword
         })
       });
+      
 
       const data = await response.json();
 
