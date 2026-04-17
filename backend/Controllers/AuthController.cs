@@ -7,9 +7,9 @@ using System.Text;
 using InventoryMS.Data;
 using InventoryMS.Models.Entities;
 using InventoryMS.Models.Enums;
-using InventoryMS.Controllers;
 using InventoryMS.Helpers;
 using InventoryMS.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryMS.Controllers
 {
@@ -20,12 +20,14 @@ namespace InventoryMS.Controllers
         private readonly InventoryDb _context;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthController> _logger;
+        private readonly ActivityLogger _activityLogger;
 
-        public AuthController(InventoryDb context, IConfiguration configuration,ILogger<AuthController> logger)
+        public AuthController(InventoryDb context, IConfiguration configuration,ILogger<AuthController> logger,ActivityLogger activityLogger)
         {
             _context = context;
             _configuration = configuration;
             _logger = logger;
+             _activityLogger = activityLogger;
         }
 
         // POST: api/auth/login
@@ -116,9 +118,9 @@ public async Task<IActionResult> Login(LoginDto dto)
 
             await _context.Database.ExecuteSqlRawAsync(
                 @"INSERT INTO Users (UniversityId, Email, PasswordHash, Fname, Lname, PhoneNumber, Department, Role, IsActive, CreatedAt)
-                  VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, 1, {8})",
+                  VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, 0, {8})",
                 dto.UniversityId, dto.Email, passwordHash, dto.Fname, dto.Lname,
-                dto.PhoneNumber, dto.Department, (int)userRole, createdAt);
+                dto.PhoneNumber, dto.Department, userRole.ToString(), createdAt);
 
             return Ok(new
             {
@@ -207,6 +209,34 @@ public async Task<IActionResult> Login(LoginDto dto)
 
             return Ok(new { message = "If that email exists, a reset link has been sent." });
         }
+        // POST: api/Auth/approve/{id}  // allows admin to approve user accounts by setting IsActive to true. This is a simple way to manage account approvals without needing a separate endpoint for listing pending users. Admins can use this endpoint to activate accounts after reviewing them.
+        [HttpPatch("approve/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ApproveUser(int id)
+        {
+            var targetUser = await _context.Users.FindAsync(id);
+            if (targetUser == null)
+                return NotFound(new { message = "User not found." });
+
+            await _context.Database.ExecuteSqlRawAsync(
+                "UPDATE Users SET IsActive = 1 WHERE id = {0}", id);
+
+            // Get the admin who approved
+            var adminIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var adminName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+            int.TryParse(adminIdClaim, out var adminId);
+
+            await _activityLogger.LogAsync(
+                activityType: "UserApproved",
+                description: $"Admin approved account for {targetUser.Fname} {targetUser.Lname} ({targetUser.Email})",
+                userId: adminId,
+                userName: adminName,
+                relatedEntityType: "User",
+                relatedEntityId: id
+            );
+
+            return Ok(new { message = "User approved successfully." });
+        }
 
         // POST: api/Auth/reset-password
         [HttpPost("reset-password")]
@@ -247,6 +277,7 @@ public async Task<IActionResult> Login(LoginDto dto)
 
             return Ok(new { message = "Password reset successfully. You can now login with your new password." });
         }
+        
     }
 
     // DTOs

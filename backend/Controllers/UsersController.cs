@@ -23,9 +23,9 @@ namespace InventoryMS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsers()
         {
-            //query database for all active users
+            //query database for all  users
             var users = await _context.Users
-                .Where(u => u.IsActive)
+                
                 .Select(u => new UserResponseDto
                 {
                     Id = u.id,

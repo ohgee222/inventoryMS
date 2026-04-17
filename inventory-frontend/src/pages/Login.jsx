@@ -243,6 +243,23 @@ const LoginGlass = () => {
             </button>
           </div>
         </form>
+        <div style={{ textAlign: 'center', marginTop: '12px' }}>
+  <button
+    type="button"
+    onClick={() => navigate('/register')}
+    style={{
+      background: 'none',
+      border: 'none',
+      color: 'white',
+      cursor: 'pointer',
+      fontSize: '14px',
+      textDecoration: 'underline',
+      opacity: 0.9,
+    }}
+  >
+    Don't have an account? Register
+  </button>
+</div>
 
         <div style={{
           marginTop: '30px',

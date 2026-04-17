@@ -6,6 +6,7 @@ import { AuthProvider } from './auth/AuthContext';
 
 // Page components
 import Login from './pages/Login';
+import Register from './pages/Register';
 import DashboardRouter from './components/DashboardRouter.jsx';
 
 // Global styles
@@ -29,6 +30,7 @@ function App() {
             
             {/* Explicit /login route (same as root) */}
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} /> 
             
             {/* Dashboard route uses DashboardRouter to show role-specific dashboard */}
             {/* DashboardRouter will render StudentDashboard OR StaffAdminDashboard based on user role */}

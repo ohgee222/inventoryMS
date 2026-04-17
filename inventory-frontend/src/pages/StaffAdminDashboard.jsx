@@ -1,55 +1,63 @@
-import { useAuth } from '../auth/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import AssetManagement from '../components/AssetManagement';
-import LoanRequests from '../components/LoanRequests';
-import ActiveLoans from '../components/ActiveLoans';
-import Dashboard from '../components/Dashboard';
-import UserManagement from '../components/UserManagement';
-import RecentActivity from '../components/RecentActivity';
+import { useAuth } from '../auth/AuthContext'; 
+import { useNavigate } from 'react-router-dom'; 
+import { useState, useEffect } from 'react'; 
+import AssetManagement from '../components/AssetManagement'; // Equipment management component
+import LoanRequests from '../components/LoanRequests'; // Loan requests component
+import ActiveLoans from '../components/ActiveLoans'; // Active loans component
+import Dashboard from '../components/Dashboard'; // Dashboard overview component
+import UserManagement from '../components/UserManagement'; // User management component
+import RecentActivity from '../components/RecentActivity'; // Activity log component
 
+// Main dashboard component for staff/admin users
 const StaffAdminDashboard = () => {
-  const { user, logout } = useAuth();
-  const [userDetails, setUserDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState('dashboard');
-  const navigate = useNavigate();
+  const { user, logout } = useAuth(); // Get current user and logout function
+  const [userDetails, setUserDetails] = useState(null); // Store user details from API
+  const [loading, setLoading] = useState(true); // Loading state
+  const [activeSection, setActiveSection] = useState('dashboard'); // Track active tab
+  const navigate = useNavigate(); // Navigation hook
 
+  // Fetch user details when component loads or user changes
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
+        // API call to get user details
         const response = await fetch(`http://localhost:7028/api/Users/${user.userId}`, {
-          headers: { 'Authorization': `Bearer ${user.token}` }
+          headers: { 'Authorization': `Bearer ${user.token}` } // Include auth token
         });
+
         if (response.ok) {
-          const data = await response.json();
-          setUserDetails(data);
+          const data = await response.json(); // Parse response
+          setUserDetails(data); // Save user details
         }
       } catch (error) {
-        console.error('Failed to fetch user details:', error);
+        console.error('Failed to fetch user details:', error); // Log error
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading
       }
     };
 
+    // Only fetch if user ID exists
     if (user?.userId) {
       fetchUserDetails();
     }
   }, [user?.userId, user?.token]);
 
+  // Handle logout button click
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    logout(); // Clear auth state
+    navigate('/login'); // Redirect to login page
   };
 
-  const isAdmin = user?.role === 'Admin';
+  const isAdmin = user?.role === 'Admin'; // Check if user is admin
+
+  // Display user's full name if available, otherwise fallback to user ID
   const displayName = userDetails 
     ? `${userDetails.fname} ${userDetails.lname}` 
     : user?.userId;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-      {/* Header */}
+      {/* Header section */}
       <header style={{
         backgroundColor: '#ffffff',
         borderBottom: '1px solid #e5e7eb',
@@ -68,7 +76,7 @@ const StaffAdminDashboard = () => {
             alignItems: 'center',
             padding: '16px 0'
           }}>
-            {/* Logo and Title */}
+            {/* Logo and title */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{
                 width: '40px',
@@ -79,8 +87,9 @@ const StaffAdminDashboard = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-               
               </div>
+
+              {/* App title */}
               <div>
                 <h1 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#111827' }}>
                   IT Equipment Management
@@ -91,16 +100,21 @@ const StaffAdminDashboard = () => {
               </div>
             </div>
 
-            {/* User Info and Logout */}
+            {/* User info and logout */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ textAlign: 'right' }}>
+                {/* Display name */}
                 <p style={{ margin: 0, fontSize: '14px', color: '#111827', fontWeight: '500' }}>
                   {loading ? 'Loading...' : displayName}
                 </p>
+
+                {/* Role label */}
                 <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>
                   {isAdmin ? 'Admin' : 'Staff '}
                 </p>
               </div>
+
+              {/* Logout button */}
               <button onClick={handleLogout} style={{
                 padding: '8px 16px',
                 backgroundColor: '#ffffff',
@@ -113,6 +127,7 @@ const StaffAdminDashboard = () => {
                 alignItems: 'center',
                 gap: '8px'
               }}>
+                {/* Logout icon */}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                   <polyline points="16 17 21 12 16 7"></polyline>
@@ -125,13 +140,13 @@ const StaffAdminDashboard = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main content area */}
       <main style={{
         maxWidth: '1280px',
         margin: '0 auto',
         padding: '32px 24px'
       }}>
-        {/* Tab Navigation */}
+        {/* Tab navigation */}
         <div style={{
           backgroundColor: '#f3f4f6',
           borderRadius: '8px',
@@ -140,6 +155,8 @@ const StaffAdminDashboard = () => {
           gap: '4px',
           marginBottom: '32px'
         }}>
+          
+          {/* Dashboard tab */}
           <button
             onClick={() => setActiveSection('dashboard')}
             style={{
@@ -149,15 +166,10 @@ const StaffAdminDashboard = () => {
               fontWeight: activeSection === 'dashboard' ? '600' : '500'
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
             Dashboard
           </button>
 
+          {/* Equipment tab */}
           <button
             onClick={() => setActiveSection('assets')}
             style={{
@@ -167,118 +179,93 @@ const StaffAdminDashboard = () => {
               fontWeight: activeSection === 'assets' ? '600' : '500'
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-            </svg>
             Equipment
           </button>
-              {isAdmin && (
-          <button
-            onClick={() => setActiveSection('loanRequests')}
-            style={{
-              ...tabButtonStyle,
-              backgroundColor: activeSection === 'loanRequests' ? '#ffffff' : 'transparent',
-              boxShadow: activeSection === 'loanRequests' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-              fontWeight: activeSection === 'loanRequests' ? '600' : '500'
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            Loan Requests
-          </button>)}
 
+          {/* Loan Requests tab (admin only) */}
+          {isAdmin && (
+            <button
+              onClick={() => setActiveSection('loanRequests')}
+              style={{
+                ...tabButtonStyle,
+                backgroundColor: activeSection === 'loanRequests' ? '#ffffff' : 'transparent'
+              }}
+            >
+              Loan Requests
+            </button>
+          )}
+
+          {/* Active Loans tab */}
           <button
             onClick={() => setActiveSection('activeLoans')}
             style={{
               ...tabButtonStyle,
-              backgroundColor: activeSection === 'activeLoans' ? '#ffffff' : 'transparent',
-              boxShadow: activeSection === 'activeLoans' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-              fontWeight: activeSection === 'activeLoans' ? '600' : '500'
+              backgroundColor: activeSection === 'activeLoans' ? '#ffffff' : 'transparent'
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
             Active Loans
           </button>
 
-
+          {/* Users tab (admin only) */}
           {isAdmin && (
             <button
               onClick={() => setActiveSection('users')}
               style={{
                 ...tabButtonStyle,
-                backgroundColor: activeSection === 'users' ? '#ffffff' : 'transparent',
-                boxShadow: activeSection === 'users' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                fontWeight: activeSection === 'users' ? '600' : '500'
+                backgroundColor: activeSection === 'users' ? '#ffffff' : 'transparent'
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
               Users
             </button>
-   
-            
-
           )}
-          {isAdmin && (
-  <button
-    onClick={() => setActiveSection('activity')}
-    style={{
-      ...tabButtonStyle,
-      backgroundColor: activeSection === 'activity' ? '#ffffff' : 'transparent',
-      boxShadow: activeSection === 'activity' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-      fontWeight: activeSection === 'activity' ? '600' : '500'
-    }}
-  >
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-    </svg>
-    Activity
-  </button>
-)}
 
-</div>
-          
-             
-        
-            {isAdmin && activeSection === 'users' && (
-            <section>
-              <UserManagement />
-            </section>
-)}
-           {isAdmin && activeSection === 'activity' && (
-            <section>
-              <RecentActivity />
-            </section>)}
-            {isAdmin && activeSection === 'loanRequests' && (
-              <section>
-                <LoanRequests />
-              </section>)}
-        {/* Content Sections */}
+          {/* Activity tab (admin only) */}
+          {isAdmin && (
+            <button
+              onClick={() => setActiveSection('activity')}
+              style={{
+                ...tabButtonStyle,
+                backgroundColor: activeSection === 'activity' ? '#ffffff' : 'transparent'
+              }}
+            >
+              Activity
+            </button>
+          )}
+        </div>
+
+        {/* Conditional rendering of sections */}
+
+        {/* User management section */}
+        {isAdmin && activeSection === 'users' && (
+          <section>
+            <UserManagement />
+          </section>
+        )}
+
+        {/* Activity section */}
+        {isAdmin && activeSection === 'activity' && (
+          <section>
+            <RecentActivity />
+          </section>
+        )}
+
+        {/* Loan requests section */}
+        {isAdmin && activeSection === 'loanRequests' && (
+          <section>
+            <LoanRequests />
+          </section>
+        )}
+
+        {/* Default sections */}
         {activeSection === 'dashboard' && <Dashboard />}
-        {activeSection === 'assets' && <AssetManagement />} 
+        {activeSection === 'assets' && <AssetManagement />}
         {activeSection === 'activeLoans' && <ActiveLoans />}
-      
-       
       </main>
     </div>
   );
 };
 
+// Shared style for tab buttons
 const tabButtonStyle = {
   padding: '10px 20px',
   border: 'none',
@@ -292,4 +279,4 @@ const tabButtonStyle = {
   color: '#374151'
 };
 
-export default StaffAdminDashboard;
+export default StaffAdminDashboard; // Export component

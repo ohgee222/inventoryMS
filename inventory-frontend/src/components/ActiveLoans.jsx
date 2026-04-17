@@ -58,7 +58,7 @@ const fetchActiveLoans = async () => {
       },
       body: JSON.stringify({
         receivedByStaffId: parseInt(user.userId, 10),
-        returnNotes: ""  // ← Add this
+        returnNotes: ""  
       })
     });
     
