@@ -20,6 +20,7 @@ namespace InventoryMS.Controllers
         }
 
         // GET: api/Users
+        [Authorize(Roles = "Admin,Staff")] // Only Admins and Staff can access this endpoint
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsers()
         {
@@ -199,22 +200,22 @@ namespace InventoryMS.Controllers
         }
 
         // DELETE: api/Users/5 (Soft delete - sets IsActive to false)
+
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // Only Admins can delete users
         public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
+{
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
+    {
+        return NotFound(new { message = $"User with ID {id} not found" });
+    }
 
-            if (user == null)
-            {
-                return NotFound(new { message = $"User with ID {id} not found" });
-            }
+    _context.Users.Remove(user);
+    await _context.SaveChangesAsync();
 
-            // Soft delete - just mark as inactive
-            user.IsActive = false;
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = $"User {user.FullName} deleted successfully" });
-        }
+    return Ok(new { message = $"User {user.FullName} deleted successfully" });
+}
     }
 
     // DTOs

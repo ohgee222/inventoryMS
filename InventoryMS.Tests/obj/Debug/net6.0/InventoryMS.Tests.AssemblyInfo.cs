@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InventoryMS.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+34f1f417451cbf25b960141b43ea7b7fea036012")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dcef6a891b4bc8f6abbb5a2923805d83c3aa2a0e")]
 [assembly: System.Reflection.AssemblyProductAttribute("InventoryMS.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InventoryMS.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

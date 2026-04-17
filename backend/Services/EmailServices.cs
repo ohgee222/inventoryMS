@@ -105,6 +105,39 @@ namespace InventoryMS.Services
         _logger.LogError($"Stack trace: {ex.StackTrace}");
         throw;
     }
+    }
+    public async Task SendAccountApprovedEmailAsync(string toEmail, string userName)
+{
+    try
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress("IT Equipment System", _configuration["Email:SenderEmail"]));
+        message.To.Add(new MailboxAddress(userName, toEmail));
+        message.Subject = "Your Account Has Been Approved";
+
+        message.Body = new TextPart("html")
+        {
+            Text = $@"
+                <h2>Account Approved</h2>
+                <p>Dear {userName},</p>
+                <p>Your account has been approved by an Administrator. You can now log in to the IT Equipment Management System.</p>
+                <p><strong>Login here:</strong> <a href='http://localhost:7028/login'>Click here to login</a></p>
+                <p>Best regards,<br/>Computer Science IT Team</p>
+            "
+        };
+
+        using var client = new SmtpClient();
+        await client.ConnectAsync(_configuration["Email:SmtpServer"], 587, MailKit.Security.SecureSocketOptions.StartTls);
+        await client.AuthenticateAsync(_configuration["Email:SenderEmail"], _configuration["Email:Password"]);
+        await client.SendAsync(message);
+        await client.DisconnectAsync(true);
+
+        _logger.LogInformation($"Account approval email sent to {toEmail}");
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Failed to send approval email: {ex.Message}");
+    }
 }
 }
 }

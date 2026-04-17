@@ -168,7 +168,7 @@ public async Task<IActionResult> Login(LoginDto dto)
             var emailError = EmailValidator.GetEmailError(dto.Email);
             if (emailError != null)
             {
-                // Don't reveal if email exists or not - security best practice
+                // Don't reveal if email exists
                 return Ok(new { message = "If that email exists, a reset link has been sent." });
             }
 
@@ -234,6 +234,19 @@ public async Task<IActionResult> Login(LoginDto dto)
                 relatedEntityType: "User",
                 relatedEntityId: id
             );
+
+            try
+                {
+                    var emailService = HttpContext.RequestServices.GetRequiredService<EmailService>();
+                    await emailService.SendAccountApprovedEmailAsync(
+                        toEmail: targetUser.Email,
+                        userName: $"{targetUser.Fname} {targetUser.Lname}"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Failed to send approval email: {ex.Message}");
+                }
 
             return Ok(new { message = "User approved successfully." });
         }
