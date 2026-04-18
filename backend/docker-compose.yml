@@ -7,6 +7,7 @@
       MYSQL_DATABASE: InventoryMs
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
       - inventory_network
     healthcheck:
